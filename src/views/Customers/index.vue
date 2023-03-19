@@ -3,7 +3,7 @@
 
         <div class="flex justify-end">
             <Button icon="pi pi-plus" label="Создать заказчика"
-                class="b-[#060E28] bg-white color-[#060E28] font-medium hover:bg-[#060E28]"
+                class="border-[#060E28] bg-white text-[#060E28] font-medium hover:bg-[#060E28]"
                 @click="redirectToCreateCustomerPage" />
         </div>
 
@@ -18,15 +18,15 @@
                         <i v-if="slotProps.data.is_vip === true" class="pi pi-check"></i>
                     </template>
                 </Column>
-                <Column field="uid" header="">
-                    <template>
-                        <div class="flex justify-between w-90%">
-                            <Button class="b-[#060E28] bg-white color-[#060E28] font-medium hover:bg-[#060E28]"
-                                icon="pi pi-ellipsis-h" />
-                            <Button class="b-[#060E28] bg-white color-[#060E28] font-medium hover:bg-[#060E28]"
-                                icon="pi pi-pencil" />
-                            <Button class="b-[#FF0000] bg-white color-[#FF0000] font-medium hover:bg-[#FF0000]"
-                                icon="pi pi-trash" />
+                <Column>
+                    <template #body="rowData">
+                        <div class="flex justify-between w-11/12">
+                            <Button class="border-[#060E28] bg-white text-[#060E28] font-medium hover:bg-[#060E28]"
+                                icon="pi pi-ellipsis-h" @click="showDetail(rowData)"></Button>
+                            <Button class="border-[#060E28] bg-white text-[#060E28] font-medium hover:bg-[#060E28]"
+                                icon="pi pi-pencil" @click="editData(rowData)"></Button>
+                            <Button class="border-[#FF0000] bg-white text-[#FF0000] font-medium hover:bg-[#FF0000]"
+                                icon="pi pi-trash" @click="deleteData(rowData)"></Button>
                         </div>
 
                     </template>

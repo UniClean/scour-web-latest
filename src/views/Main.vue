@@ -4,7 +4,7 @@
             <div class="flex flex-col items-center justify-start h-screen sidebar">
                 <div class="sidebar-header p-[1rem] flex-col">
                     <img src="../assets/images/scour_short_logo.png" alt="logo" class="w-10 pb-10" />
-                    <Button class="bg-[#060E28] b-[#060E28]" icon="pi pi-bars" @click="visibleLeft = true" />
+                    <Button class="bg-[#060E28] border-[#060E28]" icon="pi pi-bars" @click="visibleLeft = true" />
                 </div>
                 <div class="sidebar-content p-[1rem] ">
                     <router-link :active-class="linkActive" :class="link" to="/"><i class="pi pi-home"></i></router-link>
