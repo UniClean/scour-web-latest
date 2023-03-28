@@ -8,7 +8,7 @@
                 <Column field="first_name" header="Имя сотрудника" />
                 <Column field="last_name" header="Фамилия сотрудника" />
                 <Column field="email" header="Email сотрудника" />
-                
+
             </DataTable>
         </div>
 
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { getAllEmployees } from '@/services//employees';
+import { getAllEmployees } from '@/services';
 
 
 import DataTable from 'primevue/datatable'
