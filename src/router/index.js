@@ -5,6 +5,7 @@ import Main from '@/views/Main.vue'
 import Customers from '@/views/Customers/index.vue'
 import Employees from '@/views/Employees/index.vue'
 import Objects from '@/views/Objects/index.vue'
+import ObjectCreate from '@/views/Objects/Create.vue'
 import Orders from '@/views/Orders/index.vue'
 
 const routes = [
@@ -36,11 +37,25 @@ const routes = [
                 name: 'employees',
                 component: Employees
             },
+
+
             {
                 path: '/objects',
                 name: 'objects',
                 component: Objects
             },
+            {
+                path: '/objects/create',
+                name: 'objects-create',
+                component: ObjectCreate
+            },
+            {
+                path: '/objects/edit/:id',
+                name: 'objects-edit',
+                component: ObjectCreate
+            },
+
+
             {
                 path: '/orders',
                 name: 'orders',

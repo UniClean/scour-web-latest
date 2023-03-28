@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { getCustomerList } from '@/services//customers';
+import { getCustomerList } from '@/services';
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Button from 'primevue/button'
@@ -59,6 +59,7 @@ export default {
         getCustomerList() {
             getCustomerList().then(res => {
                 this.customerList = res;
+                console.log(this.customerList, "kdmiiks")
             });
         },
     },
