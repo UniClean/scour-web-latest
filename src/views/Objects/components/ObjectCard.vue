@@ -41,13 +41,10 @@
 
 <script>
 import Button from 'primevue/button'
-
 export default {
     props: ['object', "deleteObject", "editObject", "openOrderCreationDialog"],
     components: {
         Button
     },
-
 }
-
 </script>

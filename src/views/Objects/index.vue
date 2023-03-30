@@ -68,20 +68,16 @@ export default {
   
 <style>
 @keyframes p-progress-spinner-color {
-
     100%,
     0% {
         stroke: #060E28;
     }
-
     40% {
         stroke: #060E28;
     }
-
     66% {
         stroke: #060E28;
     }
-
     80%,
     90% {
         stroke: #060E28;

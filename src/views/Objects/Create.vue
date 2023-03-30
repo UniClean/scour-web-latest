@@ -89,7 +89,6 @@ import Dropdown from 'primevue/dropdown';
 import InputNumber from 'primevue/inputnumber';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
-
 export default {
     name: 'ObjectCreate',
     components: {
@@ -98,7 +97,6 @@ export default {
         InputNumber,
         InputText,
         Textarea
-
     },
     data() {
         return {
@@ -185,4 +183,3 @@ export default {
     },
 }
 </script>
-

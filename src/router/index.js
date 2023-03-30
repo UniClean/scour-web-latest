@@ -4,6 +4,7 @@ import Login from '@/views/Login.vue'
 import Main from '@/views/Main.vue'
 import Customers from '@/views/Customers/index.vue'
 import Employees from '@/views/Employees/index.vue'
+import EmployeeCreate from '@/views/Employees/Create.vue'
 import Objects from '@/views/Objects/index.vue'
 import ObjectCreate from '@/views/Objects/Create.vue'
 import Orders from '@/views/Orders/index.vue'
@@ -32,10 +33,21 @@ const routes = [
                 name: 'customers',
                 component: Customers
             },
+
             {
                 path: '/employees',
                 name: 'employees',
                 component: Employees
+            },
+            {
+                path: '/employees/create',
+                name: 'employees-create',
+                component: EmployeeCreate
+            },
+            {
+                path: '/employees/edit/:id',
+                name: 'employees-edit',
+                component: EmployeeCreate
             },
 
 
