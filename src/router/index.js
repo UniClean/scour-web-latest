@@ -8,6 +8,7 @@ import EmployeeCreate from '@/views/Employees/Create.vue'
 import Objects from '@/views/Objects/index.vue'
 import ObjectCreate from '@/views/Objects/Create.vue'
 import Orders from '@/views/Orders/index.vue'
+import OrderCreate from '@/views/Orders/Create.vue'
 
 const routes = [
     {
@@ -72,7 +73,17 @@ const routes = [
                 path: '/orders',
                 name: 'orders',
                 component: Orders
-            }
+            },
+            {
+                path: '/orders/create',
+                name: 'orders-create',
+                component: OrderCreate
+            },
+            {
+                path: '/orders/edit/:id',
+                name: 'orders-edit',
+                component: OrderCreate
+            },
         ]
     }]
 
