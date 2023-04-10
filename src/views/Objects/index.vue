@@ -2,9 +2,11 @@
     <div class="w-93% m-auto">
 
         <div class="flex justify-end">
-            <Button icon="pi pi-plus" label="Создать объект"
-                class="b-[#060E28] bg-white color-[#060E28] font-medium hover:bg-[#060E28]" @click="redirectToCreatePage" />
+            <Button icon="pi pi-plus" label="Добавить объект"
+                class="border-[#060E28] bg-white text-[#060E28] font-medium hover:bg-[#060E28] mt-5 mr-5"
+                @click="redirectToCreatePage" />
         </div>
+
         <div v-if="isDownloading" class="flex justify-center items-center">
             <ProgressSpinner />
         </div>

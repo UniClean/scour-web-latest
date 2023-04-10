@@ -1,13 +1,13 @@
 <template>
-    <div class="w-93% m-auto p-10">
+    <div class="w-93% m-auto">
 
         <div class="flex justify-end">
-            <Button icon="pi pi-plus" label="Создать заказчика"
-                class="border-[#060E28] bg-white text-[#060E28] font-medium hover:bg-[#060E28]"
-                @click="redirectToCreateCustomerPage" />
+            <Button icon="pi pi-plus" label="Добавить заказчика"
+                class="border-[#060E28] bg-white text-[#060E28] font-medium hover:bg-[#060E28] mt-5 mr-5"
+                @click="redirectToCreatePage" />
         </div>
 
-        <div class="mt-4">
+        <div class="mt-4 ml-10 mr-10">
             <DataTable :value="customerList" :paginator="true" :rows="10" :rowsPerPageOptions="[10, 20, 50]"
                 :responsive="true">
                 <Column field="name" header="Название заказчика" />
@@ -18,14 +18,14 @@
                         <i v-if="slotProps.data.is_vip === true" class="pi pi-check"></i>
                     </template>
                 </Column>
-                <Column>
+                <Column class="w-1/7">
                     <template #body="rowData">
-                        <div class="flex justify-between w-11/12">
-                            <Button class="border-[#060E28] bg-white text-[#060E28] font-medium hover:bg-[#060E28]"
+                        <div class="flex justify-between">
+                            <Button class="border-[#060E28] bg-white text-[#060E28] font-medium"
                                 icon="pi pi-ellipsis-h" @click="showDetail(rowData)"></Button>
-                            <Button class="border-[#060E28] bg-white text-[#060E28] font-medium hover:bg-[#060E28]"
+                            <Button class="border-[#228B22] bg-white text-[#228B22] hover:bg-[#228B22] font-medium"
                                 icon="pi pi-pencil" @click="editData(rowData)"></Button>
-                            <Button class="border-[#FF0000] bg-white text-[#FF0000] font-medium hover:bg-[#FF0000]"
+                            <Button class="border-[#FF0000] bg-white text-[#FF0000] font-medium  "
                                 icon="pi pi-trash" @click="deleteData(rowData)"></Button>
                         </div>
 

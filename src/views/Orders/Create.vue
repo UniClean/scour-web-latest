@@ -1,18 +1,22 @@
 <template>
-    <div>
-        <h2 class="text-md">{{ title }}</h2>
-        <div class="mt-4">
+    <div class="main">
+     
+      <h2 class="title">{{ title }}</h2>
 
-            <div class="object_customer m-t-5 w-40% ">
-                <h5 class="m-t-3">Выберите объект</h5>
-                <Dropdown class="m-t-1 w-100%" v-model="body.object_id" :options="objectsList" optionLabel="name"
-                    placeholder="Выберите объект" />
+          <div>
+            <img src="../../assets/images/build_empty.png" class="w-40 "/>
+
+            <div >
+                <h5 >Выберите объект</h5>
+                <Dropdown class="mt-1 custom-dropdown" v-model="body.object_id" :options="objectsList" optionLabel="name"
+                    placeholder="Объекты" />
 
             </div>
 
          
 
-            <div class="object_name m-t-5">
+            <div class="custom-dropdown mt-5">
+                <h5 >Выберите тип заявки</h5>
                 <div class="p-inputgroup w-40%">
                     <span class="p-inputgroup-addon">
                         <i class="pi pi-building text-[#060E28]"></i>
@@ -23,21 +27,27 @@
 
 
 
-            <div class="customer_additional_information m-t-5 ">
+            <div class="custom-dropdown mt-5 ">
                 <h5 class="p-mt-3">Дополнительная информация</h5>
-                <Textarea class="w-40% h-20" v-model="body.additional_information" :autoResize="true" rows="5" cols="30" />
+                <Textarea class="custom-dropdown h-20" v-model="body.additional_information" :autoResize="true" rows="5" cols="30" />
             </div>
 
-            <div class="object_address m-t-5">
-                <div class="p-inputgroup w-40%">
-                    <span class="p-inputgroup-addon">
-                        <i class="pi pi-flag text-[#060E28]"></i>
-                    </span>
-                    <InputText placeholder="Дата дедлайна для отчета" v-model="body.report_deadline" />
-                </div>
-            </div>
+            <div class="custom-dropdown mt-5">
+    <h5 class="p-mt-3">Выберите время дедлайна для отчета</h5>
+    <div class="p-inputgroup w-40%">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-flag text-[#060E28]"></i>
+      </span>
+      <Calendar
+        placeholder="Дата дедлайна для отчета"
+        v-model="body.report_deadline"
+        showTime
+        format="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+      />
+    </div>
+  </div>
 
-            <Button :label="buttonLabel" class="bg-[#060E28] b-[#060E28] m-t-5" @click="validateAndPrepare" />
+            <Button :label="buttonLabel" class="bg-[#060E28] b-[#060E28] mt-5 w-40" @click="validateAndPrepare" />
         </div>
     </div>
 </template>
@@ -46,15 +56,15 @@
 import { getOrder, updateOrder, getObjectsList, createOrder } from '@/services'
 import Button from 'primevue/button'
 import Dropdown from 'primevue/dropdown';
-// import InputNumber from 'primevue/inputnumber';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
+import Calendar from 'primevue/calendar';
 export default {
     name: 'OrderCreate',
     components: {
         Button,
         Dropdown,
-        
+        Calendar,
         InputText,
         Textarea
     },
@@ -93,7 +103,7 @@ export default {
     },
     computed: {
         title() {
-            return this.isEditing ? "Редактирование заявки" : "Создание заявки"
+            return this.isEditing ? "Редактирование заявки" : "Создание новой заявки"
         },
         buttonLabel() {
             return this.isEditing ? "Редактировать" : "Создать"
@@ -112,7 +122,6 @@ export default {
             this.loading = true
             // TODO: сделать это менее ужасно
             data.object_id = data.object_id.id
-            
             createOrder(data).then(res => {
                 this.closeOnLoadEnded(res)
             })
@@ -132,6 +141,30 @@ export default {
             this.loading = false
             this.$router.back()
         },
+        
     },
 }
 </script>
+
+<style>
+
+.main{
+    width: 50%;
+    text-align: left;
+    margin-left: 10px;
+    color: black;
+}
+
+.title {
+    text-align: left; 
+    margin-left: 10px;
+    font-size: 24px;
+    color: black;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.custom-dropdown {
+  width: 450px; 
+}
+</style>

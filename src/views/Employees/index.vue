@@ -3,7 +3,8 @@
 
         <div class="flex justify-end">
             <Button icon="pi pi-plus" label="Добавить сотрудника"
-                class="b-[#060E28] bg-white color-[#060E28] font-medium hover:bg-[#060E28]" @click="redirectToCreatePage" />
+                class="border-[#060E28] bg-white text-[#060E28] font-medium hover:bg-[#060E28] mt-5 mr-5"
+                @click="redirectToCreatePage" />
         </div>
         <div v-if="isDownloading" class="flex justify-center items-center">
             <ProgressSpinner />
