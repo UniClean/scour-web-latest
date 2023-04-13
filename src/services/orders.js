@@ -21,7 +21,7 @@ export const deleteOrder = (id) => api
     .then(res => res.data);
 
 export const confirmOrder = (order_id) => api
-    .get(`/api/orders/${order_id}/confirm/`)
+    .post(`/api/orders/${order_id}/confirm/`)
     .then(res => res.data);
 
 export const getAssignedEmployees = (order_id) => api

@@ -47,28 +47,13 @@
                 </div>
             </div>
 
-            <!-- <div class="card-body__item ">
-                <div class="card-body__item__title">
-                    <p><span class="font-bold">Статус:</span> {{ 
-                    order.status === 'PLANNED' ? 'Создана' : 
-                    (order.status === 'IN_PROGRESS' ? 'На выполнении' : 
-                    (order.status === 'COMPLETED' ? 'Ждет подтверждения' : 
-                    (order.status === 'CONFIRMED' ? 'Завершена' : 
-                    (order.status === 'OVERDUE' ? 'Просрочена' : order.status))))}} </p>
-                </div>
-                <div class="card-body__item__content">
-                </div>
-            </div> -->
-
-
-
     <div v-if="order.status == 'COMPLETED'" class="report mt-5">
 
         <div class="flex justify-end">
     <Button label="Отчет" class="mt-5 mr-3 border-1 border-black text-black hover:bg-green-500"
-    @click="() => showDialog()" />
+    @click=" showDialog(order.id)" />
     <Button label="Подтвердить" class="mt-5 border-1 border-black text-black hover:bg-green-500"
-    @click="deleteData(rowData)" />
+    @click="confirmOrder(order.id)" />
 </div>
 
 <div>
@@ -87,12 +72,11 @@
             </DataTable>
 
                 <div class="comment mt-5">
-                    <p>{{assignedEmployees}}</p>
                     <div class="article-header">
                         <div class="frame">
                         <p class="header-text">Комментарий:</p>
                 
-                        
+                        <div>{{assignedEmployees}}</div>
                         <p>Все отработали, вымыли, почистили</p>
                         </div>
                     </div>
@@ -117,6 +101,7 @@
 
 
 <script>
+import { getAssignedEmployees } from '@/services';
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog';
 import DataTable from 'primevue/datatable'
@@ -126,7 +111,7 @@ export default {
         return {
             isDownloading: false,
             displayDialog: false,
-            
+            assignedEmployees: [],
         };
     },
     components: {
@@ -141,13 +126,22 @@ export default {
             return date.toLocaleString();
         },
 
-        showDialog() {
+        getAssignedEmployees(orderID) {
+            getAssignedEmployees(orderID).then(res => {
+                this.assignedEmployees = res;
+                this.isDownloading = false;
+            });
+        },
+
+        showDialog(orderID) {
+    getAssignedEmployees(orderID)
       this.displayDialog = true;
+      
     },
     
 }
     ,
-    props: ['order', 'deleteOrder', 'editOrder'],
+    props: ['order', 'deleteOrder', 'editOrder', 'confirmOrder'],
     computed: {
         circleClass() {
             const status = this.order.status;

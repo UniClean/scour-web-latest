@@ -32,7 +32,7 @@
             <div class="custom mt-3">
                 <div class="p-inputgroup w-40%">
                     <span class="p-inputgroup-addon">
-                        <i class="pi pi-stop text-[#060E28]"></i>
+                        <i class="pi pi-ellipsis-h text-[#060E28]"></i>
                     </span>
                     <InputNumber placeholder="Площадь объекта" v-model="body.area" mode="decimal" :minFractionDigits="1"
                         suffix=" кв. м" />
@@ -42,7 +42,7 @@
             <div class="custom mt-3">
                 <div class="p-inputgroup w-40%">
                     <span class="p-inputgroup-addon">
-                        <i class="pi pi-flag text-[#060E28]"></i>
+                        <i class="pi pi-map-marker text-[#060E28]"></i>
                     </span>
                     <InputText placeholder="Адрес" v-model="body.address" />
                 </div>
@@ -105,6 +105,7 @@ export default {
             loading: false,
             customerList: [],
             supervisors: [],
+            allEmployees: [],
             body: {
                 customer_id: 0,
                 name: '',
@@ -122,13 +123,12 @@ export default {
         this.isEditing = Boolean(this.$route.params.id)
     },
     mounted() {
+        this.getAllEmployees()
         // TODO: переделать через store
         getCustomerList().then(res => {
             this.customerList = res
         })
-        getAllEmployees().then(res => {
-            this.supervisors = res
-        })
+        
         if (this.isEditing) {
             this.loading = true
             getObject(this.id).then(res => {
@@ -146,6 +146,20 @@ export default {
         }
     },
     methods: {
+
+        getAllEmployees() {
+            getAllEmployees().then(res => {
+                this.allEmployees = res;
+                this.supervisors = this.filterEmployeesByPosition('supervisor');
+                this.isDownloading = false;
+            });
+        },
+
+        filterEmployeesByPosition(position) {
+            return this.allEmployees.filter(employee => employee.position.name === position);
+        },
+
+
         validateAndPrepare() {
             const data = { ...this.body }
             if (this.isEditing) {
@@ -164,6 +178,7 @@ export default {
             })
         },
         edit(data) {
+
             this.loading = true
             // TODO: сделать это менее ужасно
             if (Number.isInteger(data.customer_id.type)) {

@@ -57,8 +57,9 @@ export default {
             router.push(`objects/edit/${objectId}`)
         },
         openOrderCreationDialog() {
-            console.log("open dialog")
+            router.push('orders/create')
         },
+
         redirectToCreatePage() {
             router.push('objects/create')
         }

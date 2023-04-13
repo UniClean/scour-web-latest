@@ -37,7 +37,8 @@
             <TabPanel header="Ждут подтверждения">
                 
                 <div class="order-container">
-        <OrderCard v-for="order in completedOrders" :order="order" :deleteOrder="deleteOrder" :editOrder="editOrder"
+        <OrderCard v-for="order in completedOrders" :order="order" :deleteOrder="deleteOrder" :confirmOrder="confirmOrder"
+        :editOrder="editOrder" :getAssignedEmployees="getAssignedEmployees"
              :key="order.id" class="order-card"/>
                 </div>
             
@@ -72,7 +73,7 @@
 
 
 <script>
-import { getOrdersList, deleteOrder } from '@/services';
+import { getOrdersList, deleteOrder, confirmOrder } from '@/services';
 import Button from 'primevue/button'
 import OrderCard from './components/OrderCard.vue';
 import ProgressSpinner from 'primevue/progressspinner';
@@ -90,8 +91,8 @@ export default {
             inProgressOrders: [],
             completedOrders: [],
             confirmedOrders: [],
-            overdueOrders: []
-            
+            overdueOrders: [],
+           
         };
     },
     components: {
@@ -113,6 +114,8 @@ export default {
                 this.isDownloading = false;
             });
         },
+
+
         deleteOrder(orderId) {
             deleteOrder(orderId).then(res => {
                 console.log(res)
@@ -121,6 +124,13 @@ export default {
         },
         editOrder(orderId) {
             router.push(`orders/edit/${orderId}`)
+        },
+
+        confirmOrder(orderId) {
+            confirmOrder(orderId).then(res => {
+                console.log(res)
+            })
+            this.getOrdersList()
         },
         
         redirectToCreatePage() {
@@ -133,6 +143,7 @@ export default {
     mounted() {
         this.isDownloading = true;
         this.getOrdersList();
+      
     },
 }
 </script>

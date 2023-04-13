@@ -85,7 +85,8 @@ export default {
                 { value: 'OTHER', label: 'Другое' }
                     ],
             body: {
-                object_id: 0,
+                // object_id: 0,
+                object_id: this.$route.params.object_id || 0,
                 type: '',
                 additional_information: '',
                 report_deadline: '',
