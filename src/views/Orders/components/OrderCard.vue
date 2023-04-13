@@ -40,6 +40,15 @@
 
             <div class="card-body__item mt-4">
                 <div class="card-body__item__title">
+                    <p><span class="font-bold">Ответственный супервайзер:</span> {{ order.object.assigned_supervisor.last_name}} 
+                        {{ order.object.assigned_supervisor.first_name}} </p>
+                </div>
+                <div class="card-body__item__content">
+                </div>
+            </div>
+
+            <!-- <div class="card-body__item ">
+                <div class="card-body__item__title">
                     <p><span class="font-bold">Статус:</span> {{ 
                     order.status === 'PLANNED' ? 'Создана' : 
                     (order.status === 'IN_PROGRESS' ? 'На выполнении' : 
@@ -49,29 +58,95 @@
                 </div>
                 <div class="card-body__item__content">
                 </div>
-            </div>
-            <div v-if="order.status == 'COMPLETED'" class="flex justify-end">
+            </div> -->
+
+
+
+    <div v-if="order.status == 'COMPLETED'" class="report mt-5">
+
+        <div class="flex justify-end">
+    <Button label="Отчет" class="mt-5 mr-3 border-1 border-black text-black hover:bg-green-500"
+    @click="() => showDialog()" />
     <Button label="Подтвердить" class="mt-5 border-1 border-black text-black hover:bg-green-500"
     @click="deleteData(rowData)" />
 </div>
 
-        </div>
+<div>
+            <Dialog  :header="'Отчет по уборке объекта: '+  order.object.name " v-model:visible="displayDialog" 
+            style="width: 400px !important; background-color: white;">
+
+            <div class="content">
+
+            <DataTable >
+
+                <Column field=ваук header="Клинер" />
+                <Column field="website" header="Отработано часов" />
+                    <div v-if="isDownloading" class="flex justify-center items-center">
+            <ProgressSpinner /></div>
+                   
+            </DataTable>
+
+                <div class="comment mt-5">
+                    <p>{{assignedEmployees}}</p>
+                    <div class="article-header">
+                        <div class="frame">
+                        <p class="header-text">Комментарий:</p>
+                
+                        
+                        <p>Все отработали, вымыли, почистили</p>
+                        </div>
+                    </div>
+
+                    <p>{{ order.supervisor_comments }} </p>
+                </div>
+                
+            </div>
+
+        </Dialog>
+    </div>
+
+
+    </div>
+    
+        
+
+            
+</div>
 </div>
 </template>
 
 
 <script>
 import Button from 'primevue/button'
+import Dialog from 'primevue/dialog';
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
 export default {
+    data() {
+        return {
+            isDownloading: false,
+            displayDialog: false,
+            
+        };
+    },
     components: {
         Button,
+        Dialog,
+        DataTable,
+        Column
     },
     methods: {
         formatDate(dateTime) {
             const date = new Date(dateTime);
-            return date.toLocaleString(); // You can customize the format as needed
-        }
+            return date.toLocaleString();
+        },
+
+        showDialog() {
+      this.displayDialog = true;
     },
+    
+}
+    ,
     props: ['order', 'deleteOrder', 'editOrder'],
     computed: {
         circleClass() {
@@ -90,7 +165,10 @@ export default {
                 return ''; 
             }
         }
-    }
+    },
+    mounted() {
+        this.isDownloading = true;
+    },
 }
 </script>
 
@@ -101,4 +179,19 @@ export default {
     text-align: left; 
 }
 
+.article-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10vh;
+  border: 2px solid #000;
+}
+
+
+
+
+.header-text {
+  font-weight: bold;
+  text-align: center;
+}
 </style>

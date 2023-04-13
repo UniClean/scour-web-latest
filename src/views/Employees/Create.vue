@@ -1,115 +1,131 @@
 <template>
-    <div>
-        <h2 class="text-md">{{ title }}</h2>
+    <div class="main">
+        <h2 class="title">{{ title }}</h2>
         <div class="mt-4">
 
-            <div class="object_name m-t-5">
+            <div class="custom mt-5">
                 <div class="p-inputgroup w-40%">
                     <span class="p-inputgroup-addon">
-                        <i class="pi pi-building text-[#060E28]"></i>
+                        <i class="pi pi-user text-[#060E28]"></i>
                     </span>
                     <InputText placeholder="Имя сотрудника" v-model="body.first_name" />
                 </div>
             </div>
 
-            <div class="object_area m-t-5">
+            <div class="custom mt-3">
                 <div class="p-inputgroup w-40%">
                     <span class="p-inputgroup-addon">
-                        <i class="pi pi-stop text-[#060E28]"></i>
+                        <i class="pi pi-ellipsis-h text-[#060E28]"></i>
                     </span>
                     <InputText placeholder="Фамилия сотрудника" v-model="body.last_name" />
                 </div>
             </div>
 
-            <div class="object_address m-t-5">
+            <div class="custom mt-3">
                 <div class="p-inputgroup w-40%">
                     <span class="p-inputgroup-addon">
-                        <i class="pi pi-flag text-[#060E28]"></i>
+                        <i class="pi pi-ellipsis-h text-[#060E28]"></i>
                     </span>
                     <InputText placeholder="Отчество сотрудника" v-model="body.surname" />
                 </div>
             </div>
 
-            <div class="object_address m-t-5">
+            <div class="custom mt-3">
                 <div class="p-inputgroup w-40%">
                     <span class="p-inputgroup-addon">
-                        <i class="pi pi-flag text-[#060E28]"></i>
+                        <i class="pi pi-phone text-[#060E28]"></i>
                     </span>
                     <InputText placeholder="Номер телефона сотрудника" v-model="body.phone" />
                 </div>
             </div>
 
-            <div class="object_address m-t-5">
+            <div class="custom mt-3">
                 <div class="p-inputgroup w-40%">
                     <span class="p-inputgroup-addon">
-                        <i class="pi pi-flag text-[#060E28]"></i>
+                        <i class="pi pi-envelope text-[#060E28]"></i>
                     </span>
                     <InputText placeholder="E-mail сотрудника" v-model="body.email" />
                 </div>
             </div>
 
-            <div class="object_address m-t-5">
-                <div class="p-inputgroup w-40%">
-                    <span class="p-inputgroup-addon">
-                        <i class="pi pi-flag text-[#060E28]"></i>
-                    </span>
-                    <InputText placeholder="Дата рождения сотрудника" v-model="body.date_of_birth" />
-                </div>
-            </div>
 
-            <div class="object_address m-t-5">
-                <div class="p-inputgroup w-40%">
-                    <span class="p-inputgroup-addon">
-                        <i class="pi pi-flag text-[#060E28]"></i>
-                    </span>
-                    <InputText placeholder="Дата найма сотрудника" v-model="body.date_of_employment" />
-                </div>
-            </div>
+            <div class="custom mt-3">
+    <h5 class="p-mt-3">Укажите день рождения сотрудника</h5>
+    <div class="p-inputgroup w-40%">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-calendar-times text-[#060E28]"></i>
+      </span>
+      <Calendar
+        placeholder="День рождения сотрудника"
+        v-model="body.date_of_birth"
+        format="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+      />
+    </div>
+    </div>
 
-            <div class="object_address m-t-5">
+
+
+            <div class="custom mt-3">
+    <h5 class="p-mt-3">Укажите дату найма сотрудника</h5>
+    <div class="p-inputgroup w-40%">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-calendar text-[#060E28]"></i>
+      </span>
+      <Calendar
+        placeholder="Дата найма сотрудника"
+        v-model="body.date_of_employment"
+        format="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" />
+    </div>
+
+            <div class="custom mt-3">
                 <div class="p-inputgroup w-40%">
                     <span class="p-inputgroup-addon">
-                        <i class="pi pi-flag text-[#060E28]"></i>
+                        <i class="pi pi-home text-[#060E28]"></i>
                     </span>
                     <InputText placeholder="Адрес сотрудника" v-model="body.address" />
                 </div>
             </div>
 
-            <div class="object_address m-t-5">
+            <div class="custom mt-3">
                 <div class="p-inputgroup w-40%">
                     <span class="p-inputgroup-addon">
-                        <i class="pi pi-flag text-[#060E28]"></i>
+                        <i class="pi pi-ellipsis-h text-[#060E28]"></i>
                     </span>
                     <InputText placeholder="Город" v-model="body.city" />
                 </div>
             </div>
 
-            <div class="object_customer m-t-5 w-40% ">
-                <h5 class="m-t-3">Выберите должность сотрудника</h5>
-                <Dropdown class="m-t-1 w-100%" v-model="body.position_id" :options="positionList" optionLabel="name"
+            <div class="custom mt-3 ">
+                <h5 class="m-t-3">Укажите должность сотрудника</h5>
+                <Dropdown class="custom w-100%" v-model="body.position_id" :options="positionList" optionLabel="name"
                     placeholder="Должность" />
+                    
 
             </div>
 
             
 
-            <div class="object_plan m-t-5">
+            <div class="custom mt-3">
+                <h5 class="m-t-3">Укажите зарплату сотрудника</h5>
                 <div class="p-inputgroup w-40%">
                     <span class="p-inputgroup-addon">
-                        <i class="pi pi-users text-[#060E28]"></i>
+                        <i class="pi pi-dollar text-[#060E28]"></i>
                     </span>
                     <InputNumber mode="decimal" placeholder="Зарплата сотрудника"
-                        v-model="body.salary" />
+                        v-model="body.salary"/>
+
+                    <Dropdown v-model="selectedRate" :options="rates" optionLabel="label" placeholder="ставка" class="ml-2"/>
+                
+
+
+           
                 </div>
             </div>
 
-
-        
-
-
-            <Button :label="buttonLabel" class="bg-[#060E28] b-[#060E28] m-t-5" @click="validateAndPrepare" />
+            <Button :label="buttonLabel" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="validateAndPrepare" />
         </div>
-    </div>
+    </div></div>
+    
 </template>
 
 <script>
@@ -118,6 +134,8 @@ import Button from 'primevue/button'
 import InputNumber from 'primevue/inputnumber';
 import InputText from 'primevue/inputtext';
 import Dropdown from 'primevue/dropdown';
+import Calendar from 'primevue/calendar';
+
 
 export default {
     name: 'EmployeeCreate',
@@ -126,6 +144,7 @@ export default {
         InputNumber,
         InputText,
         Dropdown,
+        Calendar
 
     },
     data() {
@@ -135,6 +154,11 @@ export default {
             loading: false,
             employeeList: [],
             positionList: [],
+            selectedRate: null,
+            rates: [
+                { value: 'HOUR', label: 'тг в час' },
+                { value: 'MONTH', label: 'тг в месяц' }
+                    ],
             body: {
                 first_name: '',
                 last_name: '',
@@ -143,14 +167,25 @@ export default {
                 email: '',
                 date_of_birth: '',
                 date_of_employment: '',
-                salary: 0,
+                salary: null,
                 address: '',
                 city: '',
-                position_id: 0,
+                position_id: null,
+                rate:''
+            },
+
             
-            }
         }
     },
+
+    watch: {
+    selectedRate(value) {
+      if (value) {
+        this.body.rate = value.value;
+      }
+    }},
+
+  
     created() {
         this.id = this.$route.params.id
         this.isEditing = Boolean(this.$route.params.id)
@@ -170,14 +205,19 @@ export default {
         }
     },
     computed: {
+        
         title() {
-            return this.isEditing ? "Редактирование страницы сотрудника" : "Создание страницы сотрудника"
+            return this.isEditing ? "Редактирование страницы сотрудника" : "Добавление нового сотрудника"
         },
         buttonLabel() {
             return this.isEditing ? "Редактировать" : "Создать"
-        }
+        },
+  
+        
     },
+  
     methods: {
+      
         validateAndPrepare() {
             const data = { ...this.body }
             if (this.isEditing) {
@@ -208,7 +248,33 @@ export default {
             this.loading = false
             this.$router.back()
         },
+
+        
     },
 }
 </script>
 
+
+<style>
+
+.main{
+    width: 50%;
+    text-align: left;
+    margin-left: 20px;
+    color: black;
+}
+
+.title {
+    text-align: left; 
+    margin-left: 10px;
+    font-size: 24px;
+    color: black;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.custom {
+  width: 450px; 
+}
+
+</style>

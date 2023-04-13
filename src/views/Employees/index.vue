@@ -1,15 +1,19 @@
 <template>
     <div class="w-93% m-auto">
 
+        <div class="m-b-5 flex items-center justify-between">
+            <div class="header ml-10 mt-5">Страница работников</div>
+
         <div class="flex justify-end">
             <Button icon="pi pi-plus" label="Добавить сотрудника"
                 class="border-[#060E28] bg-white text-[#060E28] font-medium hover:bg-[#060E28] mt-5 mr-5"
                 @click="redirectToCreatePage" />
-        </div>
+        </div></div>
+
         <div v-if="isDownloading" class="flex justify-center items-center">
             <ProgressSpinner />
         </div>
-        <div class="flex flex-wrap">
+        <div class="employee-container">
             <EmployeeCard v-for="employee in employeeList" :employee="employee" :editEmployee="editEmployee"
              :deleteEmployee="deleteEmployee" :key="employee.id" />
         </div>
@@ -90,5 +94,13 @@ export default {
     90% {
         stroke: #060E28;
     }
+}
+
+.employee-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 20px; 
+   
+  
 }
 </style>

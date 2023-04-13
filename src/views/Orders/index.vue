@@ -11,13 +11,13 @@
         </div>
         </div>
 
-        <TabView class="ml-10 mt-5" :activeIndex="0">
+        <TabView class="ml-10 mt-5" >
 
             <TabPanel header="Созданные заявки" >
                 
-                    <div class="order-container">
+                    <div class="order-container" >
             <OrderCard v-for="order in plannedOrders" :order="order" :deleteOrder="deleteOrder" :editOrder="editOrder"
-                 :key="order.id" class="order-card"/>
+                 :key="order.id" class="order-card" :activeIndex="0"/>
                     </div>
                 
             </TabPanel>
@@ -161,8 +161,6 @@ export default {
   font-weight: bold;
   font-size: 24px;
 }
-
-
 
 
 .order-container {

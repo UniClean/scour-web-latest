@@ -6,33 +6,37 @@
           <div>
             <img src="../../assets/images/build_empty.png" class="w-40 "/>
 
-            <div >
+            <div class="custom mt-5">
                 <h5 >Выберите объект</h5>
-                <Dropdown class="mt-1 custom-dropdown" v-model="body.object_id" :options="objectsList" optionLabel="name"
-                    placeholder="Объекты" />
-
-            </div>
-
-         
-
-            <div class="custom-dropdown mt-5">
-                <h5 >Выберите тип заявки</h5>
                 <div class="p-inputgroup w-40%">
                     <span class="p-inputgroup-addon">
                         <i class="pi pi-building text-[#060E28]"></i>
                     </span>
-                    <InputText placeholder="Тип заявки" v-model="body.type" />
+                <Dropdown v-model="body.object_id" :options="objectsList" optionLabel="name"
+                    placeholder="Объекты" />
+                </div>
+            </div>
+
+         
+
+            <div class="custom mt-5">
+                <h5 >Выберите тип заявки</h5>
+                <div class="p-inputgroup w-40%">
+                    <span class="p-inputgroup-addon">
+                        <i class="pi pi-ellipsis-h text-[#060E28]"></i>
+                    </span>
+                    <Dropdown v-model="selectedOption" :options="options" optionLabel="label" placeholder="Тип заявки" />
                 </div>
             </div>
 
 
 
-            <div class="custom-dropdown mt-5 ">
+            <div class="custom mt-5 ">
                 <h5 class="p-mt-3">Дополнительная информация</h5>
-                <Textarea class="custom-dropdown h-20" v-model="body.additional_information" :autoResize="true" rows="5" cols="30" />
+                <Textarea class="custom" v-model="body.additional_information" :autoResize="true" rows="5" cols="30" />
             </div>
 
-            <div class="custom-dropdown mt-5">
+            <div class="custom mt-5">
     <h5 class="p-mt-3">Выберите время дедлайна для отчета</h5>
     <div class="p-inputgroup w-40%">
       <span class="p-inputgroup-addon">
@@ -47,7 +51,7 @@
     </div>
   </div>
 
-            <Button :label="buttonLabel" class="bg-[#060E28] b-[#060E28] mt-5 w-40" @click="validateAndPrepare" />
+            <Button :label="buttonLabel" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="validateAndPrepare" />
         </div>
     </div>
 </template>
@@ -56,7 +60,7 @@
 import { getOrder, updateOrder, getObjectsList, createOrder } from '@/services'
 import Button from 'primevue/button'
 import Dropdown from 'primevue/dropdown';
-import InputText from 'primevue/inputtext';
+
 import Textarea from 'primevue/textarea';
 import Calendar from 'primevue/calendar';
 export default {
@@ -65,7 +69,6 @@ export default {
         Button,
         Dropdown,
         Calendar,
-        InputText,
         Textarea
     },
     data() {
@@ -74,7 +77,13 @@ export default {
             isEditing: false,
             loading: false,
             objectsList: [],
-            
+            selectedOption: null,
+            options: [
+                { value: 'DAILY', label: 'Ежедневная' },
+                { value: 'WEEKLY', label: 'Еженедельная' },
+                { value: 'MONTHLY', label: 'Ежемесячная' },
+                { value: 'OTHER', label: 'Другое' }
+                    ],
             body: {
                 object_id: 0,
                 type: '',
@@ -83,6 +92,13 @@ export default {
             }
         }
     },
+watch: {
+    selectedOption(value) {
+      if (value) {
+        this.body.type = value.value;
+      }
+    }}
+  ,
     created() {
         this.id = this.$route.params.id
         this.isEditing = Boolean(this.$route.params.id)
@@ -151,7 +167,7 @@ export default {
 .main{
     width: 50%;
     text-align: left;
-    margin-left: 10px;
+    margin-left: 20px;
     color: black;
 }
 
@@ -164,7 +180,8 @@ export default {
     margin-top: 15px;
 }
 
-.custom-dropdown {
+.custom {
   width: 450px; 
 }
+
 </style>
