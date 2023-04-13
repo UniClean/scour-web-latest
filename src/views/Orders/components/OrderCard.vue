@@ -1,4 +1,5 @@
 <template>
+    
     <div class="card flex-1 max-w-sm mx-2 my-2 bg-white rounded-lg shadow-md p-5">
         <div class="card-body">
             <div class="flex justify-between mb-3" >
@@ -47,13 +48,22 @@
                 </div>
             </div>
 
-    <div v-if="order.status == 'COMPLETED'" class="report mt-5">
+     <div v-if="order.status == 'PLANNED'|| order.status === 'IN_PROGRESS'"  class="flex justify-end">     
+                <Button class="text-[green] border-[green] mr-1" icon="pi pi-pencil"
+                    @click="() => editOrder(order.id)" />
+                <Button class="text-[red] border-[red] mr-1 " icon="pi pi-trash"
+                    @click="() => deleteOrder(order.id)" />
+        </div>
+
+    <div v-if="order.status == 'COMPLETED'|| order.status === 'CONFIRMED'" class="report mt-5">
 
         <div class="flex justify-end">
-    <Button label="Отчет" class="mt-5 mr-3 border-1 border-black text-black hover:bg-green-500"
+
+        <Button label="Отчет" class="mt-2 mr-3 border-1 border-black text-black"
     @click=" showDialog(order.id)" />
-    <Button label="Подтвердить" class="mt-5 border-1 border-black text-black hover:bg-green-500"
-    @click="confirmOrder(order.id)" />
+
+    <div v-if="order.status == 'COMPLETED'" >  <Button label="Подтвердить" class="mt-2 border-1 border-black text-black "
+    @click="confirmOrder(order.id)" /></div>
 </div>
 
 <div>
@@ -62,26 +72,21 @@
 
             <div class="content">
 
-            <DataTable >
-
-                <Column field=ваук header="Клинер" />
-                <Column field="website" header="Отработано часов" />
-                    <div v-if="isDownloading" class="flex justify-center items-center">
-            <ProgressSpinner /></div>
-                   
-            </DataTable>
+                <DataTable :value="assignedEmployees">
+                <Column field="employee.first_name" header="Клинер" />
+                <Column field="worked_hours_amount" header="Отработано часов" class="column-custom" />
+                </DataTable>
 
                 <div class="comment mt-5">
                     <div class="article-header">
                         <div class="frame">
                         <p class="header-text">Комментарий:</p>
                 
-                        <div>{{assignedEmployees}}</div>
                         <p>Все отработали, вымыли, почистили</p>
                         </div>
                     </div>
 
-                    <p>{{ order.supervisor_comments }} </p>
+                    <!-- {{ getAssignedEmployees(order.id) }}  -->
                 </div>
                 
             </div>
@@ -111,7 +116,7 @@ export default {
         return {
             isDownloading: false,
             displayDialog: false,
-            assignedEmployees: [],
+            assignedEmployees: null,
         };
     },
     components: {
@@ -133,8 +138,8 @@ export default {
             });
         },
 
-        showDialog(orderID) {
-    getAssignedEmployees(orderID)
+    showDialog(orderID) {
+    this.getAssignedEmployees(orderID)
       this.displayDialog = true;
       
     },
@@ -178,10 +183,14 @@ export default {
   justify-content: center;
   align-items: center;
   height: 10vh;
-  border: 2px solid #000;
+  border: 1px solid #060E28;
 }
 
-
+.column-custom{
+    display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 
 .header-text {

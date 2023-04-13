@@ -25,7 +25,7 @@
                 <Column class="w-1/7">
                     <template #body="rowData">
                         <div class="flex justify-end">
-                            <Button class="border-[#060E28] bg-white text-[#060E28] font-medium mr-2"
+                            <Button class="border-[#060E28] bg-white text-[#060E28] font-medium mr-1"
                                 icon="pi pi-ellipsis-h" @click="showDetail(rowData)"></Button>
                             <Button class="text-[green] border-[green] mr-1" icon="pi pi-pencil"
                                         @click="() => editCustomer(employee.id)" />

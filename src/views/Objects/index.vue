@@ -1,6 +1,6 @@
 <template>
     <div class="w-93% m-auto">
-
+      
         <div class="m-b-5 flex items-center justify-between">
             <div class="header ml-10 mt-5">Страница объектов</div>
 

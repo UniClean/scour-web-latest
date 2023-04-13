@@ -223,7 +223,8 @@ mounted() {
         },
         closeOnLoadEnded() {
             this.loading = false
-            this.$router.back()
+            // this.$router.back()
+            this.$router.push('/orders');
         },
         
     }

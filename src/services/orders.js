@@ -25,5 +25,5 @@ export const confirmOrder = (order_id) => api
     .then(res => res.data);
 
 export const getAssignedEmployees = (order_id) => api
-    .get(`/api/orders/${order_id}/assigned_employees/`)
+    .get(`/api/orders/${order_id}/assigned_employees`)
     .then(res => res.data);
