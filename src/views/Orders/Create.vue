@@ -1,74 +1,22 @@
 <template>
-    <div class="card p-10 p-t-6 shadow-xl w-30% flex flex-col m-3 rounded-md b-t b-[#060E28]">
-        
-        
-        <div class="flex justify-center card-header font-bold" style="font-size: 20px; color: #060E28;">
-            <h2>{{ object.name }}</h2>
-        </div>
+    <div class="main">
+     
+      <h2 class="title">{{ title }}</h2>
 
-        <div class="images">
-            <img class="object-fit object-center h-full w-full" :src="object.object_image_url" alt="">
-        </div>
+          <div>
+            <img src="../../assets/images/build_empty.png" class="w-40 "/>
 
-
-        <div class="card-body mt-3">
-            <div class="card-body__item">
-                <div class="card-body__item__title">
-                    <p><span class="font-bold">Заказчик:</span> {{object.customer.name}}</p>
-                </div>
-            </div>
-
-            <div class="card-body__item">
-                <div class="card-body__item__title">
-                    <p><span class="font-bold">Адрес:</span> {{ object.address }}</p>
-                </div>
-            </div>
-
-            <div class="card-body__item">
-                <div class="card-body__item__title">
-                    <p><span class="font-bold">План:</span> {{ object.required_worker_amount }} тех-персонала</p>
-                </div>
-                <div class="card-body__item__content">
-                </div>
-            </div>
-
-            <div class="card-body__item mt-3">
-                <div class="card-body__item__title">
-                    <p><span class="font-bold">Ответственный супервайзер:</span>{{ object.assigned_supervisor.lastt_name }} {{ object.assigned_supervisor.first_name }} тех-персонала</p>
-                </div>
-                <div class="card-body__item__content">
-                </div>
-            </div>
-
-            <div class="flex justify-end mt-4">
-            <div class="flex justify-between ">
-                <Button class="text-[#060E28] border-[#060E28] bg-white mr-1" icon="pi pi-plus-circle"
-                @click=" showDialog(object.id)" />
-
-                <Button class="text-[green] border-[green] mr-1" icon="pi pi-pencil"
-                    @click="() => editObject(object.id)" />
-                    
-                <Button class="text-[red] border-[red] " icon="pi pi-trash" @click="() => deleteObject(object.id)" />
-            </div>
-        </div>
-
-        <div>
-            <Dialog  :header="'Создание заявки на объект: '+  object.name " v-model:visible="displayDialog" 
-            style="width: 500px !important; background-color: white;">
-
-            <div class="content">
-
-                <div>
-
-            <div class="custom mt-3">
-                <h5 >Выбранный объект</h5>
+            <div class="custom mt-5">
+                <h5 >Выберите объект</h5>
                 <div class="p-inputgroup w-40%">
                     <span class="p-inputgroup-addon">
-                        <i class="pi pi-home text-[#060E28]"></i>
+                        <i class="pi pi-building text-[#060E28]"></i>
                     </span>
-                    <InputText v-model="body.object_id" :value="object.name" />
+                <Dropdown v-model="body.object_id" :options="objectsList" optionLabel="name"
+                    placeholder="Объекты" />
                 </div>
             </div>
+
          
 
             <div class="custom mt-5">
@@ -94,55 +42,41 @@
       <span class="p-inputgroup-addon">
         <i class="pi pi-flag text-[#060E28]"></i>
       </span>
-     
       <Calendar
         placeholder="Дата дедлайна для отчета"
         v-model="body.report_deadline"
         showTime
         format="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-        />
+      />
     </div>
   </div>
 
             <Button :label="buttonLabel" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="validateAndPrepare" />
         </div>
-                
-            </div>
-
-        </Dialog>
-    </div>
-
-        
-        </div>
     </div>
 </template>
 
 <script>
-import Dialog from 'primevue/dialog';
+import { getOrder, updateOrder, getObjectsList, createOrder } from '@/services'
 import Button from 'primevue/button'
-import { createOrder, getOrder } from '@/services'
 import Dropdown from 'primevue/dropdown';
+
 import Textarea from 'primevue/textarea';
 import Calendar from 'primevue/calendar';
-import InputText from 'primevue/inputtext';
 export default {
-    props: ['object', "deleteObject", "editObject", "openOrderCreationDialog"],
+    name: 'OrderCreate',
     components: {
         Button,
-        Dialog,
-        Calendar,
-        Textarea,
         Dropdown,
-        InputText
+        Calendar,
+        Textarea
     },
-
-        data() {
+    data() {
         return {
-            isDownloading: false,
-            displayDialog: false,
             id: '',
             isEditing: false,
             loading: false,
+            objectsList: [],
             selectedOption: null,
             options: [
                 { value: 'DAILY', label: 'Ежедневная' },
@@ -151,31 +85,31 @@ export default {
                 { value: 'OTHER', label: 'Другое' }
                     ],
             body: {
-                object_id: this.object.id,
+                // object_id: 0,
+                object_id: this.$route.params.object_id || 0,
                 type: '',
                 additional_information: '',
                 report_deadline: '',
             }
         }
     },
-
-    watch: {
+watch: {
     selectedOption(value) {
       if (value) {
         this.body.type = value.value;
       }
     }}
   ,
-
-  created() {
+    created() {
         this.id = this.$route.params.id
         this.isEditing = Boolean(this.$route.params.id)
     },
-        
-
-mounted() {
-        this.isDownloading = true;
-      
+    mounted() {
+        // TODO: переделать через store
+        getObjectsList().then(res => {
+            this.objectsList = res
+        })
+       
         if (this.isEditing) {
             this.loading = true
             getOrder(this.id).then(res => {
@@ -184,19 +118,15 @@ mounted() {
             })
         }
     },
-
     computed: {
+        title() {
+            return this.isEditing ? "Редактирование заявки" : "Создание новой заявки"
+        },
         buttonLabel() {
             return this.isEditing ? "Редактировать" : "Создать"
         }
     },
-
     methods: {
-        showDialog() {
-      this.displayDialog = true;
-      
-    },
-
         validateAndPrepare() {
             const data = { ...this.body }
             if (this.isEditing) {
@@ -208,7 +138,7 @@ mounted() {
         create(data) {
             this.loading = true
             // TODO: сделать это менее ужасно
-            // data.object_id = data.object_id.id
+            data.object_id = data.object_id.id
             createOrder(data).then(res => {
                 this.closeOnLoadEnded(res)
             })
@@ -218,24 +148,23 @@ mounted() {
             // TODO: сделать это менее ужасно
             if (Number.isInteger(data.object_id.type)) {
                 data.object_id = data.object_id.id
-            }    
-         
+            }
+            
+            updateOrder(this.id, data).then(res => {
+                this.closeOnLoadEnded(res)
+            })
         },
         closeOnLoadEnded() {
             this.loading = false
-            // this.$router.back()
-            this.$router.push('/orders');
+            this.$router.back()
         },
         
-    }
+    },
 }
 </script>
 
 <style>
-.images {
-  max-width: 400px; 
-  height: auto;
-}
+
 .main{
     width: 50%;
     text-align: left;
@@ -255,4 +184,5 @@ mounted() {
 .custom {
   width: 450px; 
 }
+
 </style>

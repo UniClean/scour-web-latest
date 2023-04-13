@@ -3,10 +3,13 @@ import Home from '@/views/Home.vue'
 import Login from '@/views/Login.vue'
 import Main from '@/views/Main.vue'
 import Customers from '@/views/Customers/index.vue'
+import CustomerCreate from '@/views/Customers/Create.vue'
 import Employees from '@/views/Employees/index.vue'
+import EmployeeCreate from '@/views/Employees/Create.vue'
 import Objects from '@/views/Objects/index.vue'
 import ObjectCreate from '@/views/Objects/Create.vue'
 import Orders from '@/views/Orders/index.vue'
+import OrderCreate from '@/views/Orders/Create.vue'
 
 const routes = [
     {
@@ -32,10 +35,33 @@ const routes = [
                 name: 'customers',
                 component: Customers
             },
+            
+            {
+                path: '/customers/create',
+                name: 'customers-create',
+                component: CustomerCreate
+            },
+    
+            {
+                path: '/customers/edit/:id',
+                name: 'customers-edit',
+                component: CustomerCreate
+            },
+
             {
                 path: '/employees',
                 name: 'employees',
                 component: Employees
+            },
+            {
+                path: '/employees/create',
+                name: 'employees-create',
+                component: EmployeeCreate
+            },
+            {
+                path: '/employees/edit/:id',
+                name: 'employees-edit',
+                component: EmployeeCreate
             },
 
 
@@ -60,7 +86,17 @@ const routes = [
                 path: '/orders',
                 name: 'orders',
                 component: Orders
-            }
+            },
+            {
+                path: '/orders/create',
+                name: 'orders-create',
+                component: OrderCreate
+            },
+            {
+                path: '/orders/edit/:id',
+                name: 'orders-edit',
+                component: OrderCreate
+            },
         ]
     }]
 
