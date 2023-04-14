@@ -4,6 +4,8 @@
         <div class="m-b-5 flex items-center justify-between">
             <div class="header ml-10 mt-5">Страница объектов</div>
 
+            
+            
         <div class="flex justify-end">
             <Button icon="pi pi-plus" label="Добавить объект"
                 class="border-[#060E28] bg-white text-[#060E28] font-medium hover:bg-[#060E28] mt-5 mr-5"
@@ -13,10 +15,13 @@
         <div v-if="isDownloading" class="flex justify-center items-center">
             <ProgressSpinner />
         </div>
+        
+
         <div class="order-container">
             <ObjectCard v-for="object in objectsList" :object="object" :deleteObject="deleteObject" :editObject="editObject"
                 :openOrderCreationDialog="openOrderCreationDialog" :key="object.id" />
         </div>
+        
     </div>
 </template>
 
@@ -67,6 +72,7 @@ export default {
     mounted() {
         this.isDownloading = true;
         this.getObjectsList();
+        
     },
 }
 </script>

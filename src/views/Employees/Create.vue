@@ -98,7 +98,7 @@
             <div class="custom mt-3 ">
                 <h5 class="m-t-3">Укажите должность сотрудника</h5>
                 <Dropdown class="custom w-100%" v-model="body.position_id" :options="positionList" optionLabel="name"
-                    placeholder="Должность" />
+                optionValue="id"  placeholder="Должность" />
                     
 
             </div>
@@ -114,7 +114,7 @@
                     <InputNumber mode="decimal" placeholder="Зарплата сотрудника"
                         v-model="body.salary"/>
 
-                    <Dropdown v-model="selectedRate" :options="rates" optionLabel="label" placeholder="ставка" class="ml-2"/>
+                    <Dropdown v-model="body.rate" :options="rates" optionLabel="label" optionValue="value" placeholder="ставка" class="ml-2"/>
                 
 
 
@@ -178,12 +178,12 @@ export default {
         }
     },
 
-    watch: {
-    selectedRate(value) {
-      if (value) {
-        this.body.rate = value.value;
-      }
-    }},
+    // watch: {
+    // selectedRate(value) {
+    //   if (value) {
+    //     this.body.rate = value.value;
+    //   }
+    // }},
 
   
     created() {
@@ -191,16 +191,30 @@ export default {
         this.isEditing = Boolean(this.$route.params.id)
     },
     mounted() {
-        // TODO: переделать через store
 
         getAllPositions().then(res => {
             this.positionList = res
         })
         if (this.isEditing) {
             this.loading = true
+
+
             getEmployee(this.id).then(res => {
                 this.loading = false
-                this.body = res
+                this.body.first_name = res.first_name,
+
+                this.body.last_name = res.last_name,
+                this.body.surname = res.surname,
+                this.body.phone = res.phone,
+                this.body.email = res.email,
+                this.body.date_of_birth = res.date_of_birth,
+                this.body.date_of_employment = res.date_of_employment,
+                this.body.salary = res.salary,
+                this.body.address = res.address,
+                this.body.city = res.city,
+                this.body.position_id = res.position_id,
+                this.body.rate = res.rate
+                
             })
         }
     },
@@ -228,11 +242,11 @@ export default {
         },
         create(data) {
             this.loading = true
-            // TODO: сделать это менее ужасно
-            data.position_id = data.position_id.id
             createEmployee(data).then(res => {
                 this.closeOnLoadEnded(res)
             })
+
+    
         },
         edit(data) {
             this.loading = true

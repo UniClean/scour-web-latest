@@ -1,11 +1,13 @@
 <template>
     <div class="w-93% m-auto">
+        <div class="m-b-5 flex items-center justify-between">
+            <div class="header ml-10 mt-5">Заказчики</div>
 
         <div class="flex justify-end">
             <Button icon="pi pi-plus" label="Добавить заказчика"
                 class="border-[#060E28] bg-white text-[#060E28] font-medium hover:bg-[#060E28] mt-5 mr-5"
                 @click="redirectToCreatePage" />
-        </div>
+        </div></div>
         
 
         <div class="mt-4 ml-10 mr-10">
@@ -15,22 +17,22 @@
                 <Column field="website" header="Вебсайт заказчика" />
                 <Column field="email" header="Email заказчика" />
                 <Column field="is_vip" header="VIP">
-                    <div v-if="isDownloading" class="flex justify-center items-center">
-            <ProgressSpinner /></div>
+                    
                     <template #body="slotProps">
                         <i v-if="slotProps.data.is_vip === true" class="pi pi-check"></i>
                     </template>
                 </Column>
-
+                <div v-if="loading" class="flex justify-center items-center">
+            <ProgressSpinner /></div>
                 <Column class="w-1/7">
                     <template #body="rowData">
                         <div class="flex justify-end">
-                            <Button class="border-[#060E28] bg-white text-[#060E28] font-medium mr-1"
-                                icon="pi pi-ellipsis-h" @click="showDetail(rowData)"></Button>
+                            <!-- <Button class="border-[#060E28] bg-white text-[#060E28] font-medium mr-1"
+                                icon="pi pi-ellipsis-h" @click="showDetail(rowData.data.id)"></Button> -->
                             <Button class="text-[green] border-[green] mr-1" icon="pi pi-pencil"
-                                        @click="() => editCustomer(employee.id)" />
+                                        @click="() => editCustomer(rowData.data.id)" />
                             <Button class="text-[red] border-[red] mr-1 " icon="pi pi-trash"
-                                        @click="() => deleteCustomer(rowData.id)" />
+                                        @click="() => deleteCustomer(rowData.data.id)" />
                         </div>
 
                     
@@ -56,7 +58,7 @@ export default {
     data() {
         return {
             customerList: [],
-            isDownloading: false,
+            loading: false,
         };
     },
     components: {
@@ -69,10 +71,11 @@ export default {
         getCustomerList() {
             getCustomerList().then(res => {
                 this.customerList = res;
-                this.isDownloading = false;
+                this.loading = false;
             });
         },
 
+        
         deleteCustomer(customerId) {
             deleteCustomer(customerId).then(res => {
                 console.log(res)
@@ -90,7 +93,7 @@ export default {
         }
     },
     mounted() {
-        this.isDownloading = true;
+        this.loading = true;
         this.getCustomerList();
     },
 }

@@ -75,6 +75,8 @@
                 <DataTable :value="assignedEmployees">
                 <Column field="employee.first_name" header="Клинер" />
                 <Column field="worked_hours_amount" header="Отработано часов" class="column-custom" />
+                <div v-if="loading" class="flex justify-center items-center">
+            <ProgressSpinner /></div>
                 </DataTable>
 
                 <div class="comment mt-5">
@@ -82,7 +84,7 @@
                         <div class="frame">
                         <p class="header-text">Комментарий:</p>
                 
-                        <p>Все отработали, вымыли, почистили</p>
+                        <p>{{order.supervisor_comments}}</p>
                         </div>
                     </div>
 
@@ -111,10 +113,12 @@ import Button from 'primevue/button'
 import Dialog from 'primevue/dialog';
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
+import ProgressSpinner from 'primevue/progressspinner';
+
 export default {
     data() {
         return {
-            isDownloading: false,
+            loading: false,
             displayDialog: false,
             assignedEmployees: null,
         };
@@ -123,7 +127,8 @@ export default {
         Button,
         Dialog,
         DataTable,
-        Column
+        Column,
+        ProgressSpinner
     },
     methods: {
         formatDate(dateTime) {
@@ -134,7 +139,7 @@ export default {
         getAssignedEmployees(orderID) {
             getAssignedEmployees(orderID).then(res => {
                 this.assignedEmployees = res;
-                this.isDownloading = false;
+                this.loading = false;
             });
         },
 
@@ -166,7 +171,7 @@ export default {
         }
     },
     mounted() {
-        this.isDownloading = true;
+        this.loading = true;
     },
 }
 </script>

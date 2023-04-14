@@ -9,7 +9,10 @@
                     <!-- <img class="w-40" :src="body.object_image_url" alt="">
                 </div>
             </div> -->
-
+            <div v-if="loading">
+                <ProgressSpinner />
+            </div>
+            
             <div class="custom mt-5">
                 <div class="p-inputgroup w-40%">
                     <span class="p-inputgroup-addon">
@@ -51,7 +54,7 @@
             <div class="custom mt-3">
                 <h5>Выберите заказчика</h5>
                 <Dropdown class="custom" v-model="body.customer_id" :options="customerList" optionLabel="name"
-                    placeholder="Заказчик" />
+                optionValue="id" placeholder="Заказчик" />
 
             </div>
 
@@ -68,7 +71,7 @@
             <div class="custom mt-3 ">
                 <h5 class="m-t-3">Выберите ответственного супервайзера</h5>
                 <Dropdown class="custom" v-model="body.assigned_supervisor_id" :options="supervisors" optionLabel="first_name"
-                    placeholder="Супервайзер" />
+                optionValue="id" placeholder="Супервайзер" />
 
             </div>
 
@@ -76,9 +79,10 @@
                 <h5 class="p-mt-3">Дополнительная информация об объекте</h5>
                 <Textarea class="custom" v-model="body.additional_information" :autoResize="true" rows="5" cols="30" />
             </div>
-
+           
             <Button :label="buttonLabel" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="validateAndPrepare" />
         </div>
+        
     </div>
 </template>
 
@@ -133,7 +137,13 @@ export default {
             this.loading = true
             getObject(this.id).then(res => {
                 this.loading = false
-                this.body = res
+                this.body.customer_id = res.customer.id
+                this.body.name = res.name
+                this.body.address = res.address
+                this.body.area = res.area
+                this.body.additional_information = res.additional_information
+                this.body.required_worker_amount = res.required_worker_amount
+                this.body.assigned_supervisor_id = res.assigned_supervisor.id
             })
         }
     },
@@ -170,9 +180,6 @@ export default {
         },
         create(data) {
             this.loading = true
-            // TODO: сделать это менее ужасно
-            data.customer_id = data.customer_id.id
-            data.assigned_supervisor_id = data.assigned_supervisor_id.id
             createObject(data).then(res => {
                 this.closeOnLoadEnded(res)
             })

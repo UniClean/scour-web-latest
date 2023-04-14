@@ -5,8 +5,9 @@
         <router-link :class="[link, { 'linkActive': $route.path === '/orders' }]" to="/orders"><i class="pi pi-id-card p-r-5"></i> Заявки</router-link>
         <router-link :class="[link, { 'linkActive': $route.path === '/customers' }]" to="/customers"><i class="pi pi-shopping-bag p-r-5"></i> Заказчики</router-link>
         <router-link :class="[link, { 'linkActive': $route.path === '/employees' }]" to="/employees"><i class="pi pi-user p-r-5"></i> Сотрудники</router-link>
-        <router-link :class="[link, { 'linkActive': $route.path === '/objects' }]" to="/objects"><i class="pi pi-building p-r-5"></i> Объекты</router-link>
-        <router-link :class="[link, { 'linkActive': $route.path === '/reports' }]" to="/reports"><i class="pi pi-chart-line p-r-5"></i> Отчеты</router-link>
+        <router-link :class="[link, { 'linkActive': $route.path === '/objects' }]" to="/objects"><i class="pi pi-building p-r-5"></i>Объекты</router-link>
+        <router-link :class="[link, { 'linkActive': $route.path === '/equipments' }]" to='/equipments'><i class="pi pi-inbox p-r-5"></i> Инвентарь и оборудование</router-link>
+
     </div>
 </template>
 
