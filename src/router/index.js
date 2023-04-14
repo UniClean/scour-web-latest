@@ -10,6 +10,11 @@ import Objects from '@/views/Objects/index.vue'
 import ObjectCreate from '@/views/Objects/Create.vue'
 import Orders from '@/views/Orders/index.vue'
 import OrderCreate from '@/views/Orders/Create.vue'
+import Equipments from '@/views/Equipments/index.vue'
+import EquipmentCreate from '@/views/Equipments/Create.vue'
+import Inventory from '@/views/Inventory/index.vue'
+import InventoryCreate from '@/views/Inventory/Create.vue'
+
 
 const routes = [
     {
@@ -96,6 +101,38 @@ const routes = [
                 path: '/orders/edit/:id',
                 name: 'orders-edit',
                 component: OrderCreate
+            },
+            {
+                path: '/equipments',
+                name: 'equipments',
+                component: Equipments
+            },
+            
+
+            {
+                path: '/equipments/create',
+                name: 'equipments-create',
+                component: EquipmentCreate
+            },
+            {
+                path: '/equipments/edit/:id',
+                name: 'equipments-edit',
+                component: EquipmentCreate
+            },
+            {
+                path: '/inventory',
+                name: 'inventory',
+                component: Inventory
+            },
+            {
+                path: '/inventory/create',
+                name: 'inventory-create',
+                component: InventoryCreate
+            },
+            {
+                path: '/inventory/edit/:id',
+                name: 'inventory-edit',
+                component: InventoryCreate
             },
         ]
     }]

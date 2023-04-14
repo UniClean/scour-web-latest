@@ -12,7 +12,7 @@
 <router-link :class="[link, { 'link-active': $route.path === '/customers' }]" to="/customers"><i class="pi pi-shopping-bag"></i></router-link>
 <router-link :class="[link, { 'link-active': $route.path === '/employees' }]" to="/employees"><i class="pi pi-user"></i></router-link>
 <router-link :class="[link, { 'link-active': $route.path === '/objects' }]" to="/objects"><i class="pi pi-building"></i></router-link>
-<router-link :class="[link, { 'link-active': $route.path === '/reports' }]" to="/reports"><i class="pi pi-chart-line"></i></router-link>
+<router-link :class="[link, { 'link-active': $route.path === '/equipments' }]" to="/equipments"><i class="pi pi-inbox"></i></router-link>
 
           </div>
         </div>

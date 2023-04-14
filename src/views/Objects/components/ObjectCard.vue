@@ -34,7 +34,7 @@
 
             <div class="card-body__item mt-3">
                 <div class="card-body__item__title">
-                    <p><span class="font-bold">Ответственный супервайзер:</span>{{ object.assigned_supervisor.lastt_name }} {{ object.assigned_supervisor.first_name }} тех-персонала</p>
+                    <p><span class="font-bold">Ответственный супервайзер:</span>{{ object.assigned_supervisor.lastt_name }} {{ object.assigned_supervisor.first_name }} </p>
                 </div>
                 <div class="card-body__item__content">
                 </div>
@@ -103,12 +103,14 @@
         />
     </div>
   </div>
-
+  <div v-if="!loading"> 
             <Button :label="buttonLabel" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="validateAndPrepare" />
-        </div>
+        </div></div>
                 
             </div>
-
+            <div v-if="loading">
+                <ProgressSpinner />
+            </div>
         </Dialog>
     </div>
 
@@ -138,11 +140,10 @@ export default {
 
         data() {
         return {
-            isDownloading: false,
+            loading: false,
             displayDialog: false,
             id: '',
             isEditing: false,
-            loading: false,
             selectedOption: null,
             options: [
                 { value: 'DAILY', label: 'Ежедневная' },
@@ -174,7 +175,6 @@ export default {
         
 
 mounted() {
-        this.isDownloading = true;
       
         if (this.isEditing) {
             this.loading = true
@@ -192,7 +192,9 @@ mounted() {
     },
 
     methods: {
+        
         showDialog() {
+
       this.displayDialog = true;
       
     },
@@ -207,8 +209,7 @@ mounted() {
         },
         create(data) {
             this.loading = true
-            // TODO: сделать это менее ужасно
-            // data.object_id = data.object_id.id
+            
             createOrder(data).then(res => {
                 this.closeOnLoadEnded(res)
             })
