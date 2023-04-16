@@ -44,7 +44,7 @@
 
 
             <div class="custom mt-3">
-                <h5 class="p-mt-3">Дополнительная информация о заказчике</h5>
+                <h5>Дополнительная информация о заказчике</h5>
                 <Textarea class="custom" v-model="body.additional_information" :autoResize="true" rows="5" cols="30" />
             </div>
 
@@ -53,6 +53,22 @@
                 <i class="pi pi-star pl-3 text-xl mt-5 text-[#FCD12A]"></i>
                 <label class="ml-2 text-xl">VIP</label>
             </div>
+
+            <!-- <FileUpload name="demo[]" url="./upload.php" @upload="onAdvancedUpload($event)" :multiple="true" accept="image/*" :maxFileSize="1000000">
+        <p>Переместите файл для загрузки в это поле</p>
+</FileUpload> -->
+
+<FileUpload name="demo[]" url="./upload.php" @upload="onAdvancedUpload($event)" :multiple="true" accept="image/*" :maxFileSize="1000000">
+  <p>Переместите файл для загрузки в это поле</p>
+  <template #chooseButton="{ chooseEnabled }">
+    <button class="p-button p-component" :class="{ 'p-disabled': !chooseEnabled }" style="background-color: blue;">Выберите</button>
+  </template>
+  <template #uploadButton="{ uploadEnabled }">
+    <button class="p-button p-component" :class="{ 'p-disabled': !uploadEnabled }" style="background-color: blue;">Загрузить</button>
+  </template>
+</FileUpload>
+
+           
 
             <Button :label="buttonLabel" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="validateAndPrepare" />
         </div>
@@ -65,6 +81,8 @@ import Button from 'primevue/button'
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
 import Checkbox from 'primevue/checkbox';
+import FileUpload from 'primevue/fileupload';
+
 
 export default {
     name: 'CustomerCreate',
@@ -72,7 +90,8 @@ export default {
         Button,
         InputText,
         Textarea,
-        Checkbox
+        Checkbox,
+        FileUpload
     },
     data() {
         return {
@@ -172,5 +191,9 @@ export default {
 
 .color-yellow {
     color: yellow;
+}
+
+.p-fileupload-file-remove{
+    background-color: black;
 }
 </style>
