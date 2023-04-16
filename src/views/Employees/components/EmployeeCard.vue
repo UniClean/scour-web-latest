@@ -7,7 +7,7 @@
                 </div> 
 
                 <div class="flex justify-center card-header m-t-3 font-bold" style="font-size: 20px; color: #060E28;">
-            <h2>{{ employee.first_name }} {{ employee.last_name }} {{ employee.surname }}</h2>
+            <h2> {{ employee.last_name }} {{ employee.first_name }} {{ employee.surname }}</h2>
         </div>
 
 <div class="inform mt-4">
