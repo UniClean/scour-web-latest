@@ -44,7 +44,7 @@
 
 
             <div class="custom mt-3">
-                <h5 class="p-mt-3">Дополнительная информация об объекте</h5>
+                <h5 class="p-mt-3">Дополнительная информация о заказчике</h5>
                 <Textarea class="custom" v-model="body.additional_information" :autoResize="true" rows="5" cols="30" />
             </div>
 

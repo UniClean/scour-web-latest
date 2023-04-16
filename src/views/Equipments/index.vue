@@ -34,9 +34,11 @@
                     <template #body="rowData">
                         <div class="flex justify-end">
 
-<!--                             
-                            <Button  label="" class="text-[#060E28] border-[#060E28] mr-1 " icon="pi pi-plus-circle"
+                            
+                            <!-- <Button  label="" class="text-[#060E28] border-[#060E28] mr-1 " icon="pi pi-plus-circle"
                             @click=" showDialog(rowData.data.id)" /> -->
+                            <Button  label="" class="text-[#060E28] border-[#060E28] mr-1 " icon="pi pi-plus-circle"
+                            @click=" showDialog(rowData.data)" />
                             <Button class="text-[green] border-[green] mr-1" icon="pi pi-pencil"
                                         @click="() => editEquipment(rowData.data.id)" />
                             <Button class="text-[red] border-[red] mr-1 " icon="pi pi-trash"
@@ -45,24 +47,46 @@
 
                     
 
-                    </template>  3330-
+                    </template>  
                 </Column>
             </DataTable>
 
-            <!-- <div>
-            <Dialog  :header="'Прикреплени оборудования к объекту: '  " v-model:visible="displayDialog" 
+            <div>
+            <Dialog  :header="'Прикрепление оборудования к объекту ' " v-model:visible="displayDialog" 
             style="width: 400px !important; background-color: white;">
 
-            <div class="content">
+
+            <div>
+                <h5 >Выбранное оборудование</h5>
+                <div class="p-inputgroup w-40%">
+                    <span class="p-inputgroup-addon">
+                        <i class="pi pi-inbox text-[#060E28]"></i>
+                    </span>
+                    <InputText v-model="equipmentName" :value="equipmentName" readonly />
+                </div>
+            </div>
+
+           
                        <div class="comment mt-5">
-                 коммент
+                        <div class=" mt-3">
+                <h5>Выберите объект для прикрепления</h5>
+                <div class="p-inputgroup w-40%">
+                    <span class="p-inputgroup-addon">
+                        <i class="pi pi-building text-[#060E28]"></i>
+                    </span>
+                    <Dropdown v-model="assignedObject" :options="objectsList" optionLabel="name" optionValue="id"
+                        placeholder="Объекты" />
+                
+            </div>
+            <Button label="Прикрепить" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="() => assignObject(equipmentID, assignedObject)">
+</Button>
 
                 </div>
                 
             </div>
 
         </Dialog>
-    </div> -->
+    </div>
         </div>
 
 
@@ -70,22 +94,28 @@
 </template>
 
 <script>
-import { getEquipmentsList, deleteEquipment, assignObject } from '@/services';
-// getEquipmentsList,deleteEquipment, getInventory, getEquipment
+import { getEquipmentsList, deleteEquipment, assignObject, getObjectsList } from '@/services';
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Button from 'primevue/button'
 import ProgressSpinner from 'primevue/progressspinner';
 import router from '../../router'
-// import Dialog from 'primevue/dialog';
+import Dialog from 'primevue/dialog';
+import Dropdown from 'primevue/dropdown';
+import InputText from 'primevue/inputtext';
+
 
 export default {
     name: 'EquipmentsPage',
     data() {
         return {
             equipmentList: [],
+            objectsList: [],
+            assignedObject: null,
             loading: false,
             displayDialog: false,
+            equipmentID: null,
+            equipmentName: '',
         };
     },
     components: {
@@ -93,9 +123,16 @@ export default {
         Column,
         Button,
         ProgressSpinner, 
-        // Dialog
+        Dialog,
+        Dropdown,
+        InputText
     },
     methods: {
+
+        handleButtonClick() {
+      console.log(this.assignedObject);
+    },
+
         getEquipmentsList() {
             getEquipmentsList().then(res => {
                 this.equipmentList = res;
@@ -126,21 +163,34 @@ export default {
         router.push('/inventory')
         },
 
-        assignObject(equipmentId){
-            assignObject(equipmentId).then(res => {
-                console.log(res)
-            })
-        },
 
-        showDialog(equipmentId) {
-    this.assignObject(equipmentId)
-      this.displayDialog = true;
-      
-    },
+        assignObject(equipmentId, objectId) {
+            const object = { objectId: objectId }; // create an object with the objectId
+            assignObject(equipmentId, object).then(res => {
+                console.log(res);
+            });
+
+            this.displayDialog = false; 
+
+
+},
+
+showDialog(equipmentID) {
+  this.displayDialog = true;
+  this.equipmentID = equipmentID.id;
+  this.equipmentName = equipmentID.name;
+}
+
+
     },
     mounted() {
         this.loading = true;
         this.getEquipmentsList();
+
+        getObjectsList().then(res => {
+            this.objectsList = res
+        })
     },
+    
 }
 </script>

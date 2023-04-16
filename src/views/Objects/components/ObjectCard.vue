@@ -1,6 +1,8 @@
 <template>
     <div class="card p-10 p-t-6 shadow-xl w-30% flex flex-col m-3 rounded-md b-t b-[#060E28]">
-        
+        <div class="info flex justify-end">
+        <Button class="text-[black] icon-info" icon="pi pi-info-circle"
+        @click=" showInfoDialog(object.id)" /></div>
         
         <div class="flex justify-center card-header font-bold" style="font-size: 20px; color: #060E28;">
             <h2>{{ object.name }}</h2>
@@ -112,21 +114,60 @@
                 <ProgressSpinner />
             </div>
         </Dialog>
-    </div>
-
-        
+    </div>      
         </div>
+
+        <div>
+            <Dialog  :header="'Дополнительная информация по объекту: ' + object.name " v-model:visible="displayInfoDialog" 
+            style="width: 400px !important; background-color: white;">
+
+
+            <div>
+                <h5 >Площадь объекта</h5>
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon">
+                        <i class="pi pi-ellipsis-h text-[#060E28]"></i>
+                    </span>
+                    <InputNumber mode="decimal"  :value="object.area+ ' кв.м'"
+                        suffix=" кв. м" readonly/>
+
+
+                </div>
+            </div>
+
+           
+            <div class="mt-3">
+                <h5 class="p-mt-3">Дополнительная информация об объекте</h5>
+                <Textarea v-model="body.additional_information" :value="object.additional_information"
+               readonly  style="width: 350px !important;"/>
+            </div>
+
+<div class="mt-3">
+            <DataTable :value="assignedEquipment">
+                <Column field="name" header="Оборудование на объекте" class="column-custom " />
+                <div v-if="loading" class="flex justify-center items-center">
+            <ProgressSpinner /></div>
+                </DataTable></div>
+
+
+        </Dialog>
+    </div>
     </div>
 </template>
 
 <script>
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button'
-import { createOrder, getOrder } from '@/services'
+import { createOrder, getOrder, getAssignedEquipment } from '@/services'
 import Dropdown from 'primevue/dropdown';
 import Textarea from 'primevue/textarea';
 import Calendar from 'primevue/calendar';
 import InputText from 'primevue/inputtext';
+import InputNumber from 'primevue/inputnumber';
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
+import ProgressSpinner from 'primevue/progressspinner';
+
 export default {
     props: ['object', "deleteObject", "editObject", "openOrderCreationDialog"],
     components: {
@@ -135,16 +176,22 @@ export default {
         Calendar,
         Textarea,
         Dropdown,
-        InputText
+        InputText,
+        InputNumber,
+        DataTable,
+        Column,
+        ProgressSpinner
     },
 
         data() {
         return {
             loading: false,
             displayDialog: false,
+            displayInfoDialog: false,
             id: '',
             isEditing: false,
             selectedOption: null,
+            assignedEquipment: [],
             options: [
                 { value: 'DAILY', label: 'Ежедневная' },
                 { value: 'WEEKLY', label: 'Еженедельная' },
@@ -154,7 +201,6 @@ export default {
             body: {
                 object_id: this.object.id,
                 type: '',
-                additional_information: '',
                 report_deadline: '',
             }
         }
@@ -175,7 +221,7 @@ export default {
         
 
 mounted() {
-      
+    this.loading = true;
         if (this.isEditing) {
             this.loading = true
             getOrder(this.id).then(res => {
@@ -192,11 +238,23 @@ mounted() {
     },
 
     methods: {
+
+        getAssignedEquipment(objectID){
+            getAssignedEquipment(objectID).then(res => {
+                this.assignedEquipment = res;
+                console.log(this.assignedEquipment);
+                this.loading = false;
+            });
+        },
         
         showDialog() {
+      this.displayDialog = true;  
+    },
 
-      this.displayDialog = true;
-      
+    showInfoDialog(objectID) {
+    this.getAssignedEquipment(objectID);
+    console.log(this.assignedEquipment);
+      this.displayInfoDialog = true;  
     },
 
         validateAndPrepare() {
@@ -256,4 +314,20 @@ mounted() {
 .custom {
   width: 450px; 
 }
+
+.icon-info {
+  border: none !important;
+
+}
+
+.icon-info .pi {
+  font-size: 24px;
+}
+
+.column-custom{
+    display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 </style>

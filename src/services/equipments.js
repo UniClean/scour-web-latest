@@ -23,3 +23,7 @@ export const deleteEquipment = (id) => api
 export const assignObject = (id, object) => api
     .post(`/api/equipments/${id}/assign_object/`, object)
     .then(res => res.data);
+
+export const getAssignedEquipment = (object_id) => api
+    .get(`/api/equipments/object/${object_id}/`)
+    .then(res => res.data);
