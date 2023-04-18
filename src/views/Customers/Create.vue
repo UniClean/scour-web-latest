@@ -54,39 +54,10 @@
                 <label class="ml-2 text-xl">VIP</label>
             </div>
 
-            <!-- <FileUpload name="demo[]" url="./upload.php" @upload="onAdvancedUpload($event)" :multiple="true" accept="image/*" :maxFileSize="1000000">
-        <p>Переместите файл для загрузки в это поле</p>
-</FileUpload> -->
-
-
-<template>
-    <div class="card flex justify-content-center">
-        <Toast />
-        <FileUpload mode="basic" name="demo[]" url="./upload.php" accept="image/*" :maxFileSize="1000000" @upload="onUpload" />
+                <div>
+        <input type="file" @change="onFileChange">
+        <!-- <button @click="uploadFile(body.id)">Upload</button> -->
     </div>
-</template>
-
-
-<template>
-    <div class="card">
-        <Toast />
-        <FileUpload name="demo[]" url="./upload.php" @upload="onAdvancedUpload($event)" :multiple="true" accept="image/*" :maxFileSize="1000000">
-            <template #empty>
-                <p>Drag and drop files to here to upload.</p>
-            </template>
-        </FileUpload>
-    </div>
-</template>
-
-<!-- <script setup>
-import { useToast } from "primevue/usetoast";
-const toast = useToast();
-
-const onAdvancedUpload = () => {
-    toast.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded', life: 3000 });
-};
-</script> -->
-           
 
             <Button :label="buttonLabel" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="validateAndPrepare" />
         </div>
@@ -94,12 +65,11 @@ const onAdvancedUpload = () => {
 </template>
 
 <script>
-import { getCustomer, updateCustomer, createCustomer } from '@/services'
+import { getCustomer, updateCustomer, createCustomer, uploadFile } from '@/services'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
 import Checkbox from 'primevue/checkbox';
-import FileUpload from 'primevue/fileupload';
 
 
 export default {
@@ -109,14 +79,14 @@ export default {
         InputText,
         Textarea,
         Checkbox,
-        FileUpload
+        
     },
     data() {
         return {
             id: '',
             isEditing: false,
             loading: false,
-            
+            file: null,
             body: {
                 name: '',
                 is_vip: false,
@@ -156,6 +126,7 @@ export default {
     },
     methods: {
         validateAndPrepare() {
+            
             const data = { ...this.body }
             if (this.isEditing) {
                 this.edit(data)
@@ -163,16 +134,20 @@ export default {
                 this.create(data)
             }
         },
-       
+
+     
         create(data) {
             this.loading = true
             createCustomer(data).then(res => {
+                // this.uploadFile(data.id)
                 this.closeOnLoadEnded(res)
             })
         },
+
         edit(data) {
             this.loading = true
             updateCustomer(this.id, data).then(res => {
+                
                 this.closeOnLoadEnded(res)
             })
         },
@@ -180,6 +155,36 @@ export default {
             this.loading = false
             this.$router.back()
         },
+
+        uploadFile(customer_id) {
+      const formData = new FormData()
+      formData.append('file', this.file)
+      formData.append('customer_id', customer_id);
+      uploadFile(formData).then(res => {
+        if (res && res.succeeded) {
+          this.closeOnLoadEnded(res)
+        }
+        this.loading = false
+      })
+    },
+
+    // sendNewDocumentFile(documentId) {
+    //   const formData = new FormData()
+    //   formData.append('Data', this.file)
+    //   formData.append('DocumentId', documentId);
+    //   postDocumentFile(formData).then(res => {
+    //     if (res && res.succeeded) {
+    //       this.closeOnLoadEnded(res)
+    //     }
+    //     else if (res && !res.succeeded) {
+    //       this.$snackbar.showMessage({
+    //         message: res.message,
+    //         isError: true,
+    //       })
+    //     }
+    //     this.loading = false
+    //   })
+    // },
 
     },
 }

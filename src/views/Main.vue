@@ -13,7 +13,7 @@
 <router-link :class="[link, { 'link-active': $route.path === '/employees' }]" to="/employees"><i class="pi pi-user"></i></router-link>
 <router-link :class="[link, { 'link-active': $route.path === '/objects' }]" to="/objects"><i class="pi pi-building"></i></router-link>
 <router-link :class="[link, { 'link-active': $route.path === '/equipments' }]" to="/equipments"><i class="pi pi-inbox"></i></router-link>
-
+<router-link :class="[link, { 'link-active': $route.path === '/salary' }]" to="/salary"><i class="pi pi-calculator"></i></router-link>
           </div>
         </div>
         <Sidebar :modal="false" v-model:visible="visibleLeft" class="p-sidebar-sm bg-[#060E28] ">

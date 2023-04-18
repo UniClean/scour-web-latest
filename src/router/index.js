@@ -14,6 +14,7 @@ import Equipments from '@/views/Equipments/index.vue'
 import EquipmentCreate from '@/views/Equipments/Create.vue'
 import Inventory from '@/views/Inventory/index.vue'
 import InventoryCreate from '@/views/Inventory/Create.vue'
+import Salary from '@/views/Salary/Salary.vue'
 
 
 const routes = [
@@ -133,6 +134,12 @@ const routes = [
                 path: '/inventory/edit/:id',
                 name: 'inventory-edit',
                 component: InventoryCreate
+            },
+
+            {
+                path: '/salary',
+                name: 'salary',
+                component: Salary
             },
         ]
     }]
