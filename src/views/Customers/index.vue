@@ -27,8 +27,8 @@
                 <Column class="w-1/7">
                     <template #body="rowData">
                         <div class="flex justify-end">
-                            <!-- <Button class="border-[#060E28] bg-white text-[#060E28] font-medium mr-1"
-                                icon="pi pi-ellipsis-h" @click="showDetail(rowData.data.id)"></Button> -->
+                            <Button class="border-[#060E28] bg-white text-[#060E28] font-medium mr-1"
+                                icon="pi pi-file-edit" @click=" showDialog(rowData.data.id)"></Button>
                             <Button class="text-[green] border-[green] mr-1" icon="pi pi-pencil"
                                         @click="() => editCustomer(rowData.data.id)" />
                             <Button class="text-[red] border-[red] mr-1 " icon="pi pi-trash"
@@ -41,31 +41,51 @@
                 </Column>
             </DataTable>
         </div>
+        <div>
+            <Dialog  :header="'Добавление документов' " v-model:visible="displayDialog" 
+            style="width: 400px !important; background-color: white;">
 
+            <div>
+                <input type="file" ref="fileInput">
+    </div>
+
+                        
+         
+            <Button label="Добавить" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="() => uploadFile(customerID)">
+</Button>
+      
+        </Dialog>
+    </div>
 
     </div>
 </template>
 
 <script>
-import { getCustomerList, deleteCustomer } from '@/services';
+import { getCustomerList, deleteCustomer, uploadFile } from '@/services';
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Button from 'primevue/button'
 import ProgressSpinner from 'primevue/progressspinner';
+import Dialog from 'primevue/dialog';
+
 import router from '../../router'
 export default {
     name: 'CustomerPage',
     data() {
         return {
+            displayDialog: false,
+            file: null,
             customerList: [],
             loading: false,
+            customerID: 0,
         };
     },
     components: {
         DataTable,
         Column,
         Button,
-        ProgressSpinner
+        ProgressSpinner,
+        Dialog
     },
     methods: {
         getCustomerList() {
@@ -90,7 +110,34 @@ export default {
         
     redirectToCreatePage() {
         router.push('customers/create')
+        },
+
+        showDialog(customerID) {
+            this.customerID = customerID
+  this.displayDialog = true;
+  console.log(customerID)
+},
+
+  uploadFile(customerID) {
+      const formData = new FormData()
+      formData.append('customerID', this.customerID);
+      console.log(customerID)
+      const file = this.$refs.fileInput.files[0];
+      console.log(this.$refs.fileInput.files[0])
+      formData.append('file', file)
+      console.log(file)
+      uploadFile(formData).then(res => {
+        if (res && res.succeeded) {
+          this.closeOnLoadEnded(res)
         }
+        this.loading = false
+      })
+    },
+
+    closeOnLoadEnded() {
+            this.loading = false
+            this.displayDialog = false()
+        },
     },
     mounted() {
         this.loading = true;
