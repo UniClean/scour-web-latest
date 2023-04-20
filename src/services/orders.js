@@ -4,6 +4,10 @@ export const getOrdersList = () => api
     .get('/api/orders/')
     .then(res => res.data);
 
+export const getOrdersListByStatus = (status) => api
+.get(`/api/orders/status/${status}/`)
+.then(res => res.data);
+
 export const getOrder = (id) => api
 .get(`/api/orders/${id}/`)
 .then(res => res.data);

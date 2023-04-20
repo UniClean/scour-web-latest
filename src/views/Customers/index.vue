@@ -51,7 +51,7 @@
 
                         
          
-            <Button label="Добавить" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="() => uploadFile(customerID)">
+            <Button label="Добавить" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="() => uploadFile()">
 </Button>
       
         </Dialog>
@@ -77,7 +77,7 @@ export default {
             file: null,
             customerList: [],
             loading: false,
-            customerID: 0,
+            customer_id: 0,
         };
     },
     components: {
@@ -97,9 +97,7 @@ export default {
 
         
         deleteCustomer(customerId) {
-            deleteCustomer(customerId).then(res => {
-                console.log(res)
-            })
+            deleteCustomer(customerId)
             this.getCustomerList()
         },
 
@@ -113,22 +111,20 @@ export default {
         },
 
         showDialog(customerID) {
-            this.customerID = customerID
-  this.displayDialog = true;
-  console.log(customerID)
+        this.customer_id = customerID
+        this.displayDialog = true;
 },
 
-  uploadFile(customerID) {
+  uploadFile() {
       const formData = new FormData()
-      formData.append('customerID', this.customerID);
-      console.log(customerID)
+      formData.append('customer_id', this.customer_id);
       const file = this.$refs.fileInput.files[0];
-      console.log(this.$refs.fileInput.files[0])
+      
       formData.append('file', file)
       console.log(file)
       uploadFile(formData).then(res => {
-        if (res && res.succeeded) {
-          this.closeOnLoadEnded(res)
+        if (res) {
+          this.closeOnLoadEnded()
         }
         this.loading = false
       })
@@ -136,7 +132,7 @@ export default {
 
     closeOnLoadEnded() {
             this.loading = false
-            this.displayDialog = false()
+            this.displayDialog = false
         },
     },
     mounted() {
