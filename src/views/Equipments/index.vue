@@ -165,7 +165,7 @@ export default {
 
 
         assignObject(equipmentId, objectId) {
-            const object = { objectId: objectId }; // create an object with the objectId
+            const object = { objectId: objectId }; 
             assignObject(equipmentId, object).then(res => {
                 console.log(res);
             });

@@ -13,6 +13,7 @@
 
         <TabView class="ml-10 mt-5">
 
+
             <TabPanel header="Созданные заявки">
 
                 <div class="order-container">
@@ -63,7 +64,7 @@
             </TabPanel>
 
         </TabView>
-        <div v-if="isDownloading" class="flex justify-center items-center">
+        <div v-if="loading" class="flex justify-center items-center">
             <ProgressSpinner />
         </div>
     </div>
@@ -92,6 +93,7 @@ export default {
             confirmedOrders: [],
             overdueOrders: [],
             plannedOrders: [],
+            loading: false,
         };
     },
     components: {
@@ -110,25 +112,21 @@ export default {
                 this.completedOrders = this.filterOrdersByStatus('COMPLETED');
                 this.confirmedOrders = this.filterOrdersByStatus('CONFIRMED');
                 this.overdueOrders = this.filterOrdersByStatus('OVERDUE');
-                this.isDownloading = false;
+                this.loading = false;
             });
         },
-
+  
         deleteOrder(orderId) {
-            deleteOrder(orderId).then(res => {
-                console.log(res)
-            })
-            this.getOrdersList()
+            deleteOrder(orderId)
+            this.getOrdersList();
         },
         editOrder(orderId) {
             router.push(`orders/edit/${orderId}`)
         },
 
         confirmOrder(orderId) {
-            confirmOrder(orderId).then(res => {
-                console.log(res)
-            })
-            this.getOrdersList()
+            confirmOrder(orderId)
+            this.getOrdersList();
         },
 
         redirectToCreatePage() {
@@ -137,9 +135,10 @@ export default {
         filterOrdersByStatus(status) {
             return this.ordersList.filter(order => order.status === status);
         },
+       
     },
     mounted() {
-        this.isDownloading = true;
+        this.loading = true;
         this.getOrdersList();
     },
 }
