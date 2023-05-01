@@ -23,14 +23,7 @@
                         v-model="body.cost"/>                </div>
             </div>
 
-            <div class="custom mt-3">
-                <div class="p-inputgroup w-40%">
-                    <span class="p-inputgroup-addon">
-                        <i class="pi pi-ellipsis-h text-[#060E28]"></i>
-                    </span>
-                    <InputNumber mode="decimal" placeholder="Количество оборудования"
-                        v-model="body.amount"/>                </div>
-            </div>
+       
 
             
 
@@ -62,7 +55,6 @@ export default {
             
             body: {
                 name: '',
-                amount: null,
                 cost: null,                
             }
         }

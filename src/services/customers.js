@@ -27,5 +27,13 @@ export const getCustomerList = () =>
             'Content-Type': 'multipart/form-data',
           },
         })
-        .then(res => res.data)
+        .then(res => res.data);
+
+    export const getAllFiles = (customer_id) =>
+    api.get(`/api/customers/contracts/by-customer-id/${customer_id}/`)
+    .then(res => res.data);
+
+    export const displayFile = (id) =>
+    api.get(`/api/customers/contract/${id}/file/`)
+    .then(res => res.data);
         

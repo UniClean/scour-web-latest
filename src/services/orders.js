@@ -4,7 +4,7 @@ export const getOrdersList = () => api
     .get('/api/orders/')
     .then(res => res.data);
 
-export const getOrdersListByStatus = (status) => api
+export const getOrdersByStatus= (status) => api
 .get(`/api/orders/status/${status}/`)
 .then(res => res.data);
 

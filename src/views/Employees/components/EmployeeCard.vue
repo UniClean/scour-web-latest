@@ -43,6 +43,12 @@
                     <p><span class="font-bold">Дата найма:</span> {{ formatDate(employee.date_of_employment) }}</p>
                 </div>
             </div>
+
+            <div class="mt-5">
+                <div class="card-body__item__title">
+                    <p><span class="font-bold">Должность:</span> {{ employee.position.name }}</p>
+                </div>
+            </div>
             <!-- <div class="card-body__item">
                 <div class="card-body__item__title">
                     <p><span class="font-bold">Зарплата:</span> {{ employee.salary }} тг</p>

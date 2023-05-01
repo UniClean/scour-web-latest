@@ -7,7 +7,7 @@
         <router-link :class="[link, { 'linkActive': $route.path === '/employees' }]" to="/employees"><i class="pi pi-user pr-3"></i> Сотрудники</router-link>
         <router-link :class="[link, { 'linkActive': $route.path === '/objects' }]" to="/objects"><i class="pi pi-building pr-3"></i>Объекты</router-link>
         <router-link :class="[link, { 'linkActive': $route.path === '/equipments' }]" to='/equipments'><i class="pi pi-inbox pr-3"></i> Инвентарь и оборудование</router-link>
-        <router-link :class="[link, { 'linkActive': $route.path === '/salary' }]" to='/salary'><i class="pi pi-calculator pr-3"></i> Зарплаты</router-link>
+        <router-link :class="[link, { 'linkActive': $route.path === '/allsalaries' }]" to='/allsalaries'><i class="pi pi-calculator pr-3"></i> Зарплаты</router-link>
 
     </div>
 </template>
