@@ -45,6 +45,28 @@
             <Dialog  :header="'Добавление документов' " v-model:visible="displayDialog" 
             style="width: 400px !important; background-color: white;">
 
+            
+
+            <!-- <div>
+    <div v-if="customerFiles.length === 0">
+      No files found
+    </div>
+    <div v-else>
+      <div v-for="file in customerFiles" :key="file.id">
+        <iframe :src="file.contract_file" width="500" height="500"></iframe>
+      </div>
+    </div>
+  </div> -->
+
+  <div>
+   
+    <object :data="dispFile"  width="100%" >
+      <p>Unable to display PDF</p>
+    </object>
+
+
+</div>
+
             <div>
                 <input type="file" ref="fileInput">
     </div>
@@ -61,7 +83,7 @@
 </template>
 
 <script>
-import { getCustomerList, deleteCustomer, uploadFile } from '@/services';
+import { getCustomerList, deleteCustomer, uploadFile, getAllFiles, displayFile} from '@/services';
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Button from 'primevue/button'
@@ -78,6 +100,8 @@ export default {
             customerList: [],
             loading: false,
             customer_id: 0,
+            customerFiles: null,
+            dispFile: null
         };
     },
     components: {
@@ -85,7 +109,9 @@ export default {
         Column,
         Button,
         ProgressSpinner,
-        Dialog
+        Dialog,
+        
+
     },
     methods: {
         getCustomerList() {
@@ -113,6 +139,7 @@ export default {
         showDialog(customerID) {
         this.customer_id = customerID
         this.displayDialog = true;
+        this.getAllFiles(this.customer_id);
 },
 
   uploadFile() {
@@ -130,6 +157,23 @@ export default {
       })
     },
 
+    getAllFiles(customer_id){
+        getAllFiles(customer_id).then(res => {
+                this.customerFiles = res;
+                this.loading = false;
+            });
+
+    },
+
+    displayFile(file_id){
+        displayFile(file_id).then(res => {
+            this.dispFile = res;
+            console.log(this.dispFile)
+        })
+    },
+
+   
+
     closeOnLoadEnded() {
             this.loading = false
             this.displayDialog = false
@@ -138,6 +182,8 @@ export default {
     mounted() {
         this.loading = true;
         this.getCustomerList();
+        this.getAllFiles(this.customer_id);
+        this.displayFile(5)
     },
 }   
 </script>

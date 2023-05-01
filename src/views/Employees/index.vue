@@ -32,7 +32,7 @@ export default {
     data() {
         return {
             employeeList: [],
-            isDownloading: false,
+            loading: false,
         };
     },
     components: {
@@ -44,7 +44,7 @@ export default {
         getAllEmployees() {
             getAllEmployees().then(res => {
                 this.employeeList = res;
-                this.isDownloading = false;
+                this.loading = false;
             });
         },
 
@@ -67,7 +67,7 @@ export default {
         router.push('employees/create')
         }},
     mounted() {
-        this.isDownloading = true;
+        this.loading = true;
         this.getAllEmployees();
     },
 }

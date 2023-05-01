@@ -105,13 +105,12 @@
         />
     </div>
   </div>
-  <div v-if="!loading"> 
+
             <Button :label="buttonLabel" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="validateAndPrepare" />
-        </div></div>
+        </div>
                 
             </div>
             <div v-if="loading">
-                <ProgressSpinner />
             </div>
         </Dialog>
     </div>      
@@ -138,9 +137,9 @@
            
             <div class="mt-3">
                 <h5 class="p-mt-3">Дополнительная информация об объекте</h5>
-                <Textarea v-model="body.additional_information" :value="object.additional_information"
-               readonly  style="width: 350px !important;"/>
+                <InputText :value="object.additional_information" readonly style="width: 350px !important;"/>
             </div>
+
 
 <div class="mt-3">
             <DataTable :value="assignedEquipment">
@@ -202,6 +201,7 @@ export default {
                 object_id: this.object.id,
                 type: '',
                 report_deadline: '',
+                
             }
         }
     },
@@ -274,7 +274,6 @@ mounted() {
         },
         edit(data) {
             this.loading = true
-            // TODO: сделать это менее ужасно
             if (Number.isInteger(data.object_id.type)) {
                 data.object_id = data.object_id.id
             }    
@@ -282,7 +281,6 @@ mounted() {
         },
         closeOnLoadEnded() {
             this.loading = false
-            // this.$router.back()
             this.$router.push('/orders');
         },
         

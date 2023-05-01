@@ -1,5 +1,5 @@
 <template>
-    <div class="w-93% m-auto">
+    <div class="w-93% m-auto ">
 
         <div class="m-b-5 flex items-center justify-between">
             <div class="header ml-10 mt-5">Оборудование</div>
@@ -23,7 +23,6 @@
                 :responsive="true">
                 <Column field="name" header="Наименование оборудования" />
                 <Column field="cost" header="Стоимость оборудования, тг" />
-                <Column field="amount" header="Количество оборудования, шт" />
                 
                     <div v-if="loading" class="flex justify-center items-center">
             <ProgressSpinner /></div>
@@ -35,8 +34,7 @@
                         <div class="flex justify-end">
 
                             
-                            <!-- <Button  label="" class="text-[#060E28] border-[#060E28] mr-1 " icon="pi pi-plus-circle"
-                            @click=" showDialog(rowData.data.id)" /> -->
+                           
                             <Button  label="" class="text-[#060E28] border-[#060E28] mr-1 " icon="pi pi-plus-circle"
                             @click=" showDialog(rowData.data)" />
                             <Button class="text-[green] border-[green] mr-1" icon="pi pi-pencil"
@@ -194,3 +192,4 @@ showDialog(equipmentID) {
     
 }
 </script>
+

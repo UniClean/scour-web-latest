@@ -161,7 +161,7 @@ export default {
             getAllEmployees().then(res => {
                 this.allEmployees = res;
                 this.supervisors = this.filterEmployeesByPosition('supervisor');
-                this.isDownloading = false;
+                this.loading = false;
             });
         },
 
