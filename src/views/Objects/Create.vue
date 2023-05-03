@@ -3,25 +3,12 @@
         <h2 class="title">{{ title }}</h2>
         <div class="mt-4">
 
-            <!-- <div class="customer_logo m-t-10 flex w-40% flex-col items-center"> -->
-                <!-- <div> -->
-                    <!-- TODO: :src="body.object_image_url.length > 0 ? body.object_image_url : '../assets/images/build_empty.png'" -->
-                    <!-- <img class="w-40" :src="body.object_image_url" alt="">
-                </div>
-            </div> -->
+        
             <div v-if="loading">
                 <ProgressSpinner />
             </div>
             
-            <div class="custom mt-5">
-                <div class="p-inputgroup w-40%">
-                    <span class="p-inputgroup-addon">
-                        <i class="pi pi-camera text-[#060E28]"></i>
-                    </span>
-                    <InputText id="choose_image" class="h-90%" placeholder="Ссылка на url photo объекта" type="file"
-                        accept="image/*" @change="handleImageUpload" />
-                </div>
-            </div>
+        
 
             <div class="custom mt-3">
                 <div class="p-inputgroup w-40%">
@@ -33,11 +20,12 @@
             </div>
 
             <div class="custom mt-3">
+                <h5>Площадь объекта </h5>
                 <div class="p-inputgroup w-40%">
                     <span class="p-inputgroup-addon">
                         <i class="pi pi-ellipsis-h text-[#060E28]"></i>
                     </span>
-                    <InputNumber placeholder="Площадь объекта" v-model="body.area" mode="decimal" :minFractionDigits="1"
+                    <InputNumber v-model="body.area" mode="decimal" :minFractionDigits="1"
                         suffix=" кв. м" />
                 </div>
             </div>
@@ -59,11 +47,12 @@
             </div>
 
             <div class="custom mt-3">
+                <h5>Необходимое количество тех персонала на объекте </h5>
                 <div class="p-inputgroup w-40%">
                     <span class="p-inputgroup-addon">
                         <i class="pi pi-users text-[#060E28]"></i>
                     </span>
-                    <InputText mode="decimal" placeholder="Необходимое количество тех персонала на объекте"
+                    <InputText mode="decimal" 
                         v-model="body.required_worker_amount" />
                 </div>
             </div>

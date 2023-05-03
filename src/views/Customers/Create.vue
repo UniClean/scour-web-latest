@@ -54,10 +54,7 @@
                 <label class="ml-2 text-xl">VIP</label>
             </div>
 
-                <div>
-        <input type="file" @change="onFileChange">
-        <!-- <button @click="uploadFile(body.id)">Upload</button> -->
-    </div>
+                
 
             <Button :label="buttonLabel" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="validateAndPrepare" />
         </div>
