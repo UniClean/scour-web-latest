@@ -7,7 +7,7 @@
             <Button class="bg-[#060E28] border-[#060E28]" icon="pi pi-bars" @click="visibleLeft = true" />
           </div>
           <div class="sidebar-content p-[1rem] ">
-            <router-link :class="[link, { 'link-active': $route.path === '/' }]" to="/"><i class="pi pi-home"></i></router-link>
+            <!-- <router-link :class="[link, { 'link-active': $route.path === '/' }]" to="/"><i class="pi pi-home"></i></router-link> -->
 <router-link :class="[link, { 'link-active': $route.path === '/orders' }]" to="/orders"><i class="pi pi-id-card"></i></router-link>
 <router-link :class="[link, { 'link-active': $route.path === '/customers' }]" to="/customers"><i class="pi pi-shopping-bag"></i></router-link>
 <router-link :class="[link, { 'link-active': $route.path === '/employees' }]" to="/employees"><i class="pi pi-user"></i></router-link>

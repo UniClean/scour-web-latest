@@ -3,12 +3,13 @@
         <div class="m-b-5 flex items-center justify-between">
             <div class="header ml-10 mt-5">Заказчики</div>
 
-        <div class="flex justify-end">
-            <Button icon="pi pi-plus" label="Добавить заказчика"
-                class="border-[#060E28] bg-white text-[#060E28] font-medium hover:bg-[#060E28] mt-5 mr-5"
-                @click="redirectToCreatePage" />
-        </div></div>
-        
+            <div class="flex justify-end">
+                <Button icon="pi pi-plus" label="Добавить заказчика"
+                    class="border-[#060E28] bg-white text-[#060E28] font-medium hover:bg-[#060E28] mt-5 mr-5"
+                    @click="redirectToCreatePage" />
+            </div>
+        </div>
+
 
         <div class="mt-4 ml-10 mr-10">
             <DataTable :value="customerList" :paginator="true" :rows="10" :rowsPerPageOptions="[10, 20, 50]"
@@ -17,37 +18,38 @@
                 <Column field="website" header="Вебсайт заказчика" />
                 <Column field="email" header="Email заказчика" />
                 <Column field="is_vip" header="VIP">
-                    
+
                     <template #body="slotProps">
                         <i v-if="slotProps.data.is_vip === true" class="pi pi-check"></i>
                     </template>
                 </Column>
                 <div v-if="loading" class="flex justify-center items-center">
-            <ProgressSpinner /></div>
+                    <ProgressSpinner />
+                </div>
                 <Column class="w-1/7">
                     <template #body="rowData">
                         <div class="flex justify-end">
-                            <Button class="border-[#060E28] bg-white text-[#060E28] font-medium mr-1"
-                                icon="pi pi-file-edit" @click=" showDialog(rowData.data.id)"></Button>
+                            <Button class="border-[#060E28] bg-white text-[#060E28] font-medium mr-1" icon="pi pi-file-edit"
+                                @click="showDialog(rowData.data.id)"></Button>
                             <Button class="text-[green] border-[green] mr-1" icon="pi pi-pencil"
-                                        @click="() => editCustomer(rowData.data.id)" />
+                                @click="() => editCustomer(rowData.data.id)" />
                             <Button class="text-[red] border-[red] mr-1 " icon="pi pi-trash"
-                                        @click="() => deleteCustomer(rowData.data.id)" />
+                                @click="() => deleteCustomer(rowData.data.id)" />
                         </div>
 
-                    
+
 
                     </template>
                 </Column>
             </DataTable>
         </div>
         <div>
-            <Dialog  :header="'Добавление документов' " v-model:visible="displayDialog" 
-            style="width: 400px !important; background-color: white;">
+            <Dialog :header="'Добавление документов'" v-model:visible="displayDialog"
+                style="width: 400px !important; background-color: white;">
 
-            
 
-            <!-- <div>
+
+                <!-- <div>
     <div v-if="customerFiles.length === 0">
       No files found
     </div>
@@ -57,33 +59,40 @@
       </div>
     </div>
   </div> -->
+                <h1 v-if="documentLoading">LALALALLA</h1>
+                <ProgressSpinner v-if="documentLoading" />
 
-  <div>
-   
-    <object :data="dispFile"  width="100%" >
-      <p>Unable to display PDF</p>
-    </object>
+                <div v-for="(file, index) in loadedFiles" :key="index">
+                    <embed v-if="!documentLoading && loadedFiles.length > 0" :src="file" type="application/pdf" width="100%"
+                        height="600px">
+                </div>
+
+                <div>
+
+                    <object :data="dispFile" width="100%">
+                        <p>Unable to display PDF</p>
+                    </object>
 
 
-</div>
+                </div>
 
-            <div>
-                <input type="file" ref="fileInput">
-    </div>
+                <div>
+                    <input type="file" ref="fileInput">
+                </div>
 
-                        
-         
-            <Button label="Добавить" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="() => uploadFile()">
-</Button>
-      
-        </Dialog>
-    </div>
+
+
+                <Button label="Добавить" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="() => uploadFile()">
+                </Button>
+
+            </Dialog>
+        </div>
 
     </div>
 </template>
 
 <script>
-import { getCustomerList, deleteCustomer, uploadFile, getAllFiles, displayFile} from '@/services';
+import { getCustomerList, deleteCustomer, uploadFile, getAllFiles, displayFile } from '@/services';
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Button from 'primevue/button'
@@ -101,7 +110,11 @@ export default {
             loading: false,
             customer_id: 0,
             customerFiles: null,
-            dispFile: null
+            dispFile: null,
+            previewFile: null,
+            previewUrl: null,
+            loadedFiles: [],
+            documentLoading: false
         };
     },
     components: {
@@ -110,7 +123,7 @@ export default {
         Button,
         ProgressSpinner,
         Dialog,
-        
+
 
     },
     methods: {
@@ -121,7 +134,7 @@ export default {
             });
         },
 
-        
+
         deleteCustomer(customerId) {
             deleteCustomer(customerId)
             this.getCustomerList()
@@ -131,50 +144,64 @@ export default {
             router.push(`customers/edit/${customerId}`)
         },
 
-        
-    redirectToCreatePage() {
-        router.push('customers/create')
+
+        redirectToCreatePage() {
+            router.push('customers/create')
         },
 
-        showDialog(customerID) {
-        this.customer_id = customerID
-        this.displayDialog = true;
-        this.getAllFiles(this.customer_id);
-},
+        async showDialog(customerID) {
+            this.loadedFiles = []
+            this.customer_id = customerID
+            this.documentLoading = true
+            this.displayDialog = true;
+            this.getAllFiles(this.customer_id);
+            this.customerFiles.forEach(async element => {
+                this.getDocumentFile(element.id)
+            });
+            this.documentLoading = false
+        },
 
-  uploadFile() {
-      const formData = new FormData()
-      formData.append('customer_id', this.customer_id);
-      const file = this.$refs.fileInput.files[0];
-      
-      formData.append('file', file)
-      console.log(file)
-      uploadFile(formData).then(res => {
-        if (res) {
-          this.closeOnLoadEnded()
-        }
-        this.loading = false
-      })
-    },
+        uploadFile() {
+            const formData = new FormData()
+            formData.append('customer_id', this.customer_id);
+            const file = this.$refs.fileInput.files[0];
 
-    getAllFiles(customer_id){
-        getAllFiles(customer_id).then(res => {
+            formData.append('file', file)
+            uploadFile(formData).then(res => {
+                if (res) {
+                    this.closeOnLoadEnded()
+                }
+                this.loading = false
+            })
+        },
+
+        getAllFiles(customer_id) {
+            getAllFiles(customer_id).then(res => {
                 this.customerFiles = res;
                 this.loading = false;
             });
 
-    },
+        },
 
-    displayFile(file_id){
-        displayFile(file_id).then(res => {
-            this.dispFile = res;
-            console.log(this.dispFile)
-        })
-    },
-
-   
-
-    closeOnLoadEnded() {
+        displayFile(file_id) {
+            displayFile(file_id).then(res => {
+                this.dispFile = res;
+            })
+        },
+        getDocumentFile(id) {
+            displayFile(id).then(res => {
+                if (res) {
+                    const fileReader = new FileReader();
+                    fileReader.onload = () => {
+                        this.previewUrl = fileReader.result;
+                    };
+                    this.previewFile = new File([res], "document", { type: "application/pdf" })
+                    fileReader.readAsDataURL(this.previewFile);
+                    this.loadedFiles.push(this.previewUrl)
+                }
+            })
+        },
+        closeOnLoadEnded() {
             this.loading = false
             this.displayDialog = false
         },
@@ -183,7 +210,6 @@ export default {
         this.loading = true;
         this.getCustomerList();
         this.getAllFiles(this.customer_id);
-        this.displayFile(5)
     },
 }   
 </script>
