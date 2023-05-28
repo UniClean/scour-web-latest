@@ -49,17 +49,8 @@
 
 
 
-                <!-- <div>
-    <div v-if="customerFiles.length === 0">
-      No files found
-    </div>
-    <div v-else>
-      <div v-for="file in customerFiles" :key="file.id">
-        <iframe :src="file.contract_file" width="500" height="500"></iframe>
-      </div>
-    </div>
-  </div> -->
-                <h1 v-if="documentLoading">LALALALLA</h1>
+            
+                <h1 v-if="documentLoading"></h1>
                 <ProgressSpinner v-if="documentLoading" />
 
                 <div v-for="(file, index) in loadedFiles" :key="index">
@@ -69,9 +60,7 @@
 
                 <div>
 
-                    <object :data="dispFile" width="100%">
-                        <p>Unable to display PDF</p>
-                    </object>
+             
 
 
                 </div>

@@ -118,7 +118,7 @@ export default {
             return this.isEditing ? "Редактировать" : "Создать"
         },
         checkboxClass() {
-        return this.body.is_vip ? 'color-yellow' : ''; // Add this line
+        return this.body.is_vip ? 'color-yellow' : ''; 
     },
     },
     methods: {
@@ -136,7 +136,6 @@ export default {
         create(data) {
             this.loading = true
             createCustomer(data).then(res => {
-                // this.uploadFile(data.id)
                 this.closeOnLoadEnded(res)
             })
         },
@@ -165,23 +164,6 @@ export default {
       })
     },
 
-    // sendNewDocumentFile(documentId) {
-    //   const formData = new FormData()
-    //   formData.append('Data', this.file)
-    //   formData.append('DocumentId', documentId);
-    //   postDocumentFile(formData).then(res => {
-    //     if (res && res.succeeded) {
-    //       this.closeOnLoadEnded(res)
-    //     }
-    //     else if (res && !res.succeeded) {
-    //       this.$snackbar.showMessage({
-    //         message: res.message,
-    //         isError: true,
-    //       })
-    //     }
-    //     this.loading = false
-    //   })
-    // },
 
     },
 }

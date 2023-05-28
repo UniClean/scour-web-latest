@@ -49,17 +49,10 @@
                     <p><span class="font-bold">Должность:</span> {{ employee.position.name }}</p>
                 </div>
             </div>
-            <!-- <div class="card-body__item">
-                <div class="card-body__item__title">
-                    <p><span class="font-bold">Зарплата:</span> {{ employee.salary }} тг</p>
-                </div>
-                <div class="card-body__item__content">
-                </div>
-            </div></div> -->
+       
 
             <div class="card-body__item">
     <div class="card-body__item__title">
-        <!-- <p><span class="font-bold">Зарплата:</span> {{ employee.salary }} тг</p> -->
         <p v-if="employee.rate === 'HOUR'"><span class="font-bold">Зарплата:</span> {{ employee.salary }} тг/час</p>
         <p v-if="employee.rate === 'MONTH'"><span class="font-bold">Зарплата:</span> {{ employee.salary }} тг/месяц</p>
     </div>
