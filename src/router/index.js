@@ -17,6 +17,14 @@ import InventoryCreate from '@/views/Inventory/Create.vue'
 import Salary from '@/views/Salary/Salary.vue'
 import AllSalaries from '@/views/Salary/AllSalaries.vue'
 
+const authCheck = (to, from, next) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+        next();
+    } else {
+        next({ name: "Login" });
+    }
+};
 
 const routes = [
     {
@@ -28,6 +36,7 @@ const routes = [
         path: '/',
         name: 'Main',
         component: Main,
+        beforeEnter: authCheck,
         children: [
             {
                 path: '/home',
@@ -42,13 +51,13 @@ const routes = [
                 name: 'customers',
                 component: Customers
             },
-            
+
             {
                 path: '/customers/create',
                 name: 'customers-create',
                 component: CustomerCreate
             },
-    
+
             {
                 path: '/customers/edit/:id',
                 name: 'customers-edit',
@@ -109,7 +118,7 @@ const routes = [
                 name: 'equipments',
                 component: Equipments
             },
-            
+
 
             {
                 path: '/equipments/create',

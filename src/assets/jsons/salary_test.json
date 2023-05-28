@@ -1,0 +1,64 @@
+[
+    {
+        "id": 1,
+        "employeeId": 1,
+        "employeeFoolName": "Jonh Doe",
+        "monthSalary": [
+            {
+                "date": "01.04.2023",
+                "isPaid": true,
+                "hours": 2,
+                "salary": 2000
+            },
+            {
+                "date": "02.04.2023",
+                "isPaid": true,
+                "hours": 2,
+                "salary": 2000
+            },
+            {
+                "date": "03.04.2023",
+                "isPaid": false,
+                "hours": 2,
+                "salary": 2000
+            },
+            {
+                "date": "04.04.2023",
+                "isPaid": false,
+                "hours": 2,
+                "salary": 2000
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "employeeId": 2,
+        "employeeFoolName": "Jane Doe",
+        "monthSalary": [
+            {
+                "date": "01.04.2023",
+                "isPaid": true,
+                "hours": 3,
+                "salary": 2000
+            },
+            {
+                "date": "02.04.2023",
+                "isPaid": true,
+                "hours": 4,
+                "salary": 2000
+            },
+            {
+                "date": "03.04.2023",
+                "isPaid": false,
+                "hours": 2,
+                "salary": 2000
+            },
+            {
+                "date": "04.04.2023",
+                "isPaid": false,
+                "hours": 2,
+                "salary": 2000
+            }
+        ]
+    }
+]
