@@ -98,7 +98,6 @@ export default {
         this.isEditing = Boolean(this.$route.params.id)
     },
     mounted() {
-        // TODO: переделать через store
         getObjectsList().then(res => {
             this.objectsList = res
         })
@@ -139,7 +138,6 @@ export default {
         },
         edit(data) {
             this.loading = true
-            // TODO: сделать это менее ужасно
             if (Number.isInteger(data.object_id.type)) {
                 data.object_id = data.object_id.id
             }

@@ -117,7 +117,6 @@ export default {
     },
     mounted() {
         this.getAllEmployees()
-        // TODO: переделать через store
         getCustomerList().then(res => {
             this.customerList = res
         })
@@ -176,7 +175,6 @@ export default {
         edit(data) {
 
             this.loading = true
-            // TODO: сделать это менее ужасно
             if (Number.isInteger(data.customer_id.type)) {
                 data.customer_id = data.customer_id.id
             }
