@@ -178,12 +178,6 @@ export default {
         }
     },
 
-    // watch: {
-    // selectedRate(value) {
-    //   if (value) {
-    //     this.body.rate = value.value;
-    //   }
-    // }},
 
   
     created() {
@@ -250,7 +244,6 @@ export default {
         },
         edit(data) {
             this.loading = true
-            // TODO: сделать это менее ужасно
             if (Number.isInteger(data.position_id.type)) {
                 data.position_id = data.position_id.id
             }
