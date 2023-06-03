@@ -47,9 +47,6 @@
             <Dialog :header="'Добавление документов'" v-model:visible="displayDialog"
                 style="width: 400px !important; background-color: white;">
 
-
-
-            
                 <h1 v-if="documentLoading"></h1>
                 <ProgressSpinner v-if="documentLoading" />
 
@@ -59,17 +56,8 @@
                 </div>
 
                 <div>
-
-             
-
-
+                    <input type="file" accept="application/pdf" ref="fileInput">
                 </div>
-
-                <div>
-                    <input type="file" ref="fileInput">
-                </div>
-
-
 
                 <Button label="Добавить" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="() => uploadFile()">
                 </Button>
@@ -112,8 +100,6 @@ export default {
         Button,
         ProgressSpinner,
         Dialog,
-
-
     },
     methods: {
         getCustomerList() {
@@ -122,7 +108,6 @@ export default {
                 this.loading = false;
             });
         },
-
 
         deleteCustomer(customerId) {
             deleteCustomer(customerId)
@@ -133,19 +118,19 @@ export default {
             router.push(`customers/edit/${customerId}`)
         },
 
-
         redirectToCreatePage() {
             router.push('customers/create')
         },
 
-        async showDialog(customerID) {
+        showDialog(customerID) {
             this.loadedFiles = []
             this.customer_id = customerID
             this.documentLoading = true
             this.displayDialog = true;
-            this.getAllFiles(this.customer_id);
-            this.customerFiles.forEach(async element => {
-                this.getDocumentFile(element.id)
+            this.getAllFiles(this.customer_id).then(() => {
+                this.customerFiles.forEach(element => {
+                    this.getDocumentFile(element.id)
+                })
             });
             this.documentLoading = false
         },
@@ -154,7 +139,6 @@ export default {
             const formData = new FormData()
             formData.append('customer_id', this.customer_id);
             const file = this.$refs.fileInput.files[0];
-
             formData.append('file', file)
             uploadFile(formData).then(res => {
                 if (res) {
@@ -164,8 +148,8 @@ export default {
             })
         },
 
-        getAllFiles(customer_id) {
-            getAllFiles(customer_id).then(res => {
+        async getAllFiles(customer_id) {
+            await getAllFiles(customer_id).then(res => {
                 this.customerFiles = res;
                 this.loading = false;
             });
@@ -183,10 +167,10 @@ export default {
                     const fileReader = new FileReader();
                     fileReader.onload = () => {
                         this.previewUrl = fileReader.result;
+                        this.loadedFiles.push(this.previewUrl)
                     };
-                    this.previewFile = new File([res], "document", { type: "application/pdf" })
+                    this.previewFile = new File([res], "document", { type: res.type })
                     fileReader.readAsDataURL(this.previewFile);
-                    this.loadedFiles.push(this.previewUrl)
                 }
             })
         },
@@ -198,7 +182,6 @@ export default {
     mounted() {
         this.loading = true;
         this.getCustomerList();
-        this.getAllFiles(this.customer_id);
     },
 }   
 </script>
