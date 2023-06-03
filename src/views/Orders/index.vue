@@ -115,7 +115,7 @@ export default {
                 this.loading = false;
             });
         },
-  
+
         deleteOrder(orderId) {
             deleteOrder(orderId)
             this.getOrdersList();
@@ -135,7 +135,7 @@ export default {
         filterOrdersByStatus(status) {
             return this.ordersList.filter(order => order.status === status);
         },
-       
+
     },
     mounted() {
         this.loading = true;
