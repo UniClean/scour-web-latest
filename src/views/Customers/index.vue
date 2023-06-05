@@ -30,7 +30,7 @@
                     <template #body="rowData">
                         <div class="flex justify-end">
                             <Button class="border-[#060E28] bg-white text-[#060E28] font-medium mr-1" icon="pi pi-file-edit"
-                                @click="showDialog(rowData.data.id)"></Button>
+                                @click="showFileDialog(rowData.data.id)"></Button>
                             <Button class="text-[green] border-[green] mr-1" icon="pi pi-pencil"
                                 @click="() => editCustomer(rowData.data.id)" />
                             <Button class="text-[red] border-[red] mr-1 " icon="pi pi-trash"
@@ -45,21 +45,23 @@
         </div>
         <div>
             <Dialog :header="'Добавление документов'" v-model:visible="displayDialog"
-                style="width: 400px !important; background-color: white;">
+                style="width: 600px !important">
 
-                <h1 v-if="documentLoading"></h1>
-                <ProgressSpinner v-if="documentLoading" />
+                <div v-if="loadingFiles" class="flex justify-center items-center">
+            <ProgressSpinner />
+        </div>
+        <div>{{ emptyFiles }}</div>
 
-                <div v-for="(file, index) in loadedFiles" :key="index">
-                    <embed v-if="!documentLoading && loadedFiles.length > 0" :src="file" type="application/pdf" width="100%"
+                <div class="mb-3" v-for="(file, index) in loadedFiles" :key="index">
+                    <embed v-if="!loadingFiles && loadedFiles.length > 0" :src="file" type="application/pdf" width="550px"
                         height="600px">
                 </div>
 
-                <div>
+                <div class="mt-3">
                     <input type="file" accept="application/pdf" ref="fileInput">
                 </div>
 
-                <Button label="Добавить" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="() => uploadFile()">
+                <Button label="Добавить" class="bg-[#060E28] b-[#060E28] mt-1 mb-5 w-40" @click="() => uploadFile()">
                 </Button>
 
             </Dialog>
@@ -95,19 +97,20 @@ export default {
     name: 'CustomerPage',
     data() {
         return {
+            loadingFiles: false,
+            counter: 0,
             displayDialog: false,
             file: null,
             customerList: [],
             loading: false,
             customer_id: 0,
             customerFiles: null,
-            dispFile: null,
             previewFile: null,
             previewUrl: null,
-            loadedFiles: [],
-            documentLoading: false,
+            loadedFiles: [],       
             deleteDialog: false,
-            chosenCustomerID: null
+            chosenCustomerID: null,
+            emptyFiles: ''
         };
     },
     components: {
@@ -140,20 +143,24 @@ export default {
             router.push('customers/create')
         },
 
-        showDialog(customerID) {
+        showFileDialog(customerID) {  
+            this.loadingFiles = true
+            this.emptyFiles = ''   
+            this.counter = 0
             this.loadedFiles = []
-            this.customer_id = customerID
-            this.documentLoading = true
+            this.customer_id = customerID     
             this.displayDialog = true;
             this.getAllFiles(this.customer_id).then(() => {
                 this.customerFiles.forEach(element => {
                     this.getDocumentFile(element.id)
                 })
+        
             });
-            this.documentLoading = false
+            
         },
 
         uploadFile() {
+            this.loadingFiles = true
             const formData = new FormData()
             formData.append('customer_id', this.customer_id);
             const file = this.$refs.fileInput.files[0];
@@ -162,7 +169,7 @@ export default {
                 if (res) {
                     this.closeOnLoadEnded()
                 }
-                this.loading = false
+            this.loadingFiles = false
             })
         },
 
@@ -170,26 +177,29 @@ export default {
             await getAllFiles(customer_id).then(res => {
                 this.customerFiles = res;
                 this.loading = false;
+                if (this.customerFiles.length === 0)
+                 {this.loadingFiles = false;
+                    this.emptyFiles = 'Документы отсутствуют'
+                }
             });
 
         },
 
-        displayFile(file_id) {
-            displayFile(file_id).then(res => {
-                this.dispFile = res;
-            })
-        },
-        getDocumentFile(id) {
-            displayFile(id).then(res => {
+        async getDocumentFile(id) {
+            await displayFile(id).then(res => {
                 if (res) {
                     const fileReader = new FileReader();
                     fileReader.onload = () => {
                         this.previewUrl = fileReader.result;
                         this.loadedFiles.push(this.previewUrl)
                     };
+                    this.counter ++;
+                    if (this.counter === this.customerFiles.length) {
+                    this.loadingFiles = false;}               
                     this.previewFile = new File([res], "document", { type: res.type })
                     fileReader.readAsDataURL(this.previewFile);
                 }
+                else {this.loadingFiles = false}
             })
         },
         closeOnLoadEnded() {

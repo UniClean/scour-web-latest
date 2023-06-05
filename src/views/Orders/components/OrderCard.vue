@@ -49,13 +49,19 @@
             </div>
 
             <div v-if="order.status == 'PLANNED' || order.status === 'IN_PROGRESS'" class="flex justify-end">
+                
                 <Button class="text-[green] border-[green] mr-1" icon="pi pi-pencil" @click="editOrder(order.id)" />
                 <Button class="text-[red] border-[red] mr-1 " icon="pi pi-trash" @click="showDeleteDialog(order.id)" />
+                
             </div>
+
+       
 
             <div v-if="order.status == 'COMPLETED' || order.status === 'CONFIRMED'" class="report mt-5">
 
                 <div class="flex justify-end">
+                    <Button class="mt-2 mr-3 border-1 border-black text-black" icon="pi pi-file-edit"
+                                @click="showFileDialog(order.order_attachment_evidences_ids)"/>
 
                     <Button label="Отчет" class="mt-2 mr-3 border-1 border-black text-black"
                         @click=" showDialog(order.id)" />
@@ -126,6 +132,22 @@
         </div>
          </Dialog>
 
+         <Dialog :header="'Фотоотчет'" v-model:visible="displayFileDialog"
+                style="width: 600px !important; ">
+
+                <div v-if="this.orderFilesID.length === 0">Фотоотчет пуст</div>
+
+        <div v-if="loadingFiles" class="flex justify-center items-center">
+            <ProgressSpinner />
+        </div>
+                <div v-for="(file, index) in loadedFiles" :key="index" class="mb-3">
+                    <embed v-if="!documentLoading && loadedFiles.length > 0" :src="file" width="100%">
+                </div>
+  
+
+            </Dialog>
+            
+            
 
      
 
@@ -134,7 +156,7 @@
 
 
 <script>
-import { getAssignedEmployees, deleteOrder, confirmOrder } from '@/services';
+import { getAssignedEmployees, deleteOrder, confirmOrder, displayOrderFile } from '@/services';
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog';
 import DataTable from 'primevue/datatable'
@@ -145,12 +167,19 @@ import ProgressSpinner from 'primevue/progressspinner';
 export default {
     data() {
         return {
+            loadingFiles: false,
             loading: false,
             displayDialog: false,
             assignedEmployees: null,
             chosenOrderID: null,
             confirmDialog: false,
-            deleteDialog: false
+            deleteDialog: false,
+            displayFileDialog: false,
+            loadedFiles: [],
+            previewFile: null,
+            previewUrl: null,
+            counter: 0,
+            orderFilesID: null
         };
     },
     components: {
@@ -210,6 +239,38 @@ export default {
        closeConfirmDialog(){
         this.confirmDialog = false
        },
+
+
+         showFileDialog(orderFilesID) {
+            this.orderFilesID = orderFilesID
+            this.counter = 0
+            this.loadedFiles = []
+            if (orderFilesID.length > 0)
+            {this.loadingFiles = true}
+            this.displayFileDialog = true;
+            orderFilesID.forEach(file => {
+                    this.getDocumentFile(file)
+                })
+        },
+
+
+         getDocumentFile(id) {
+            
+             displayOrderFile(id).then(res => {
+                if (res) {
+                    this.loadingFiles = true
+                    const fileReader = new FileReader();
+                    fileReader.onload = () => {
+                        this.previewUrl = fileReader.result;
+                        this.loadedFiles.push(this.previewUrl)
+                    };
+                    this.counter ++;
+                    if (this.counter === this.orderFilesID.length) {
+                    this.loadingFiles = false;}
+                    this.previewFile = new File([res], "document", { type: res.type })
+                    fileReader.readAsDataURL(this.previewFile);}
+            }) 
+             },
 
     }
     ,
