@@ -7,6 +7,10 @@ import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
 import "./tailwind.css"
 
+
 createApp(App).
     use(router).use(PrimeVue).
     mount('#app')
+
+
+

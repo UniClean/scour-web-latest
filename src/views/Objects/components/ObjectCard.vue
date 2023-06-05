@@ -50,7 +50,7 @@
                 <Button class="text-[green] border-[green] mr-1" icon="pi pi-pencil"
                     @click="() => editObject(object.id)" />
                     
-                <Button class="text-[red] border-[red] " icon="pi pi-trash" @click="() => deleteObject(object.id)" />
+                <Button class="text-[red] border-[red] " icon="pi pi-trash" @click="() => showDeleteDialog(object.id)" />
             </div>
         </div>
 
@@ -151,13 +151,28 @@
 
         </Dialog>
     </div>
+
+    <Dialog  :header="'Подтверждение удаления'" v-model:visible="deleteDialog" style="width: 400px !important;">
+            <div class="dialog-content" v-if="!loading">
+            <h1>Удалить заявку?</h1>
+            <div class="mt-3" >
+                        <Button label="Да" class="bg-[green] border-[green] w-20 mr-3" @click="deleteObject(this.chosenObjectID)"></Button>
+                        <Button label="Нет" class=" bg-[grey] border-[grey] w-20" @click="closeDeleteDialog"></Button>
+                    </div>
+                </div>
+
+                <div v-if="loading" class="flex justify-center items-center">
+            <ProgressSpinner />
+        </div>
+         </Dialog>
+
     </div>
 </template>
 
 <script>
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button'
-import { createOrder, getOrder, getAssignedEquipment } from '@/services'
+import { createOrder, getOrder, getAssignedEquipment, deleteObject } from '@/services'
 import Dropdown from 'primevue/dropdown';
 import Textarea from 'primevue/textarea';
 import Calendar from 'primevue/calendar';
@@ -168,7 +183,7 @@ import Column from 'primevue/column'
 import ProgressSpinner from 'primevue/progressspinner';
 
 export default {
-    props: ['object', "deleteObject", "editObject", "openOrderCreationDialog"],
+    props: ['object', "editObject", "openOrderCreationDialog"],
     components: {
         Button,
         Dialog,
@@ -184,6 +199,8 @@ export default {
 
         data() {
         return {
+            deleteDialog: false,
+            chosenObjectID: 0,
             loading: false,
             displayDialog: false,
             displayInfoDialog: false,
@@ -218,10 +235,10 @@ export default {
         this.id = this.$route.params.id
         this.isEditing = Boolean(this.$route.params.id)
     },
-        
 
+        
 mounted() {
-    this.loading = true;
+    // this.loading = true;
         if (this.isEditing) {
             this.loading = true
             getOrder(this.id).then(res => {
@@ -284,6 +301,21 @@ mounted() {
             this.$router.push('/orders');
         },
         
+        async deleteObject(objectId) {
+            this.loading = true;
+            await deleteObject(objectId);
+            this.$emit("updateObjects");
+            this.deleteDialog = false       
+        },
+
+        showDeleteDialog(objectId){
+            this.deleteDialog = true;
+            this.chosenObjectID = objectId
+        }, 
+
+       closeDeleteDialog(){
+        this.deleteDialog = false
+       },
     }
 }
 </script>

@@ -40,7 +40,7 @@
                             <Button class="text-[green] border-[green] mr-1" icon="pi pi-pencil"
                                         @click="() => editEquipment(rowData.data.id)" />
                             <Button class="text-[red] border-[red] mr-1 " icon="pi pi-trash"
-                                        @click="() => deleteEquipment(rowData.data.id)" />
+                                        @click="() => showDeleteDialog(rowData.data.id)" />
                         </div>
 
                     
@@ -86,7 +86,20 @@
         </Dialog>
     </div>
         </div>
+        <Dialog  :header="'Подтверждение удаления'" v-model:visible="deleteDialog" style="width: 400px !important;">
+            <div class="dialog-content" v-if="!loading">
+            <h1>Удалить оборудование?</h1>
+            <div class="mt-3" >
+                        <Button label="Да" class="bg-[green] border-[green] w-20 mr-3" @click="deleteEquipment(this.chosenEquipmentID)"></Button>
+                        <Button label="Нет" class=" bg-[grey] border-[grey] w-20" @click="closeDeleteDialog"></Button>
+                    </div>
+                </div>
 
+                <div v-if="loading" class="flex justify-center items-center">
+            <ProgressSpinner />
+        </div>
+
+         </Dialog>
 
     </div>
 </template>
@@ -107,6 +120,8 @@ export default {
     name: 'EquipmentsPage',
     data() {
         return {
+            chosenEquipmentID: 0,
+            deleteDialog: false,
             equipmentList: [],
             objectsList: [],
             assignedObject: null,
@@ -114,6 +129,7 @@ export default {
             displayDialog: false,
             equipmentID: null,
             equipmentName: '',
+
         };
     },
     components: {
@@ -131,18 +147,18 @@ export default {
       console.log(this.assignedObject);
     },
 
-        getEquipmentsList() {
-            getEquipmentsList().then(res => {
+    async getEquipmentsList() {
+        await getEquipmentsList().then(res => {
                 this.equipmentList = res;
                 this.loading = false;
             });
         },
 
-        deleteEquipment(equipmentId) {
-            deleteEquipment(equipmentId).then(res => {
-                console.log(res)
-            })
+        async deleteEquipment(equipmentId) {
+            this.loading = true;
+            await deleteEquipment(equipmentId)
             this.getEquipmentsList()
+            this.deleteDialog = false 
         },
 
         editEquipment(equipmentId) {
@@ -177,7 +193,17 @@ showDialog(equipmentID) {
   this.displayDialog = true;
   this.equipmentID = equipmentID.id;
   this.equipmentName = equipmentID.name;
-}
+},
+
+showDeleteDialog(EquipmentID){
+            this.deleteDialog = true;
+            this.chosenEquipmentID = EquipmentID
+   
+        }, 
+
+       closeDeleteDialog(){
+        this.confirmDialog = false
+       },
 
 
     },

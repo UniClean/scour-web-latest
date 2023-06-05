@@ -122,9 +122,21 @@
                 </div>
             </div>
 
-            <Button :label="buttonLabel" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="validateAndPrepare" />
+            <Button :label="buttonLabel" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="showConfirmDialog" />
         </div>
-    </div></div>
+    </div>
+
+    <Dialog  :header="'Подтверждение'" v-model:visible="confirmDialog" style="width: 400px !important;">
+            <div class="dialog-content">
+            <h1>Сохранить изменения?</h1>
+            <div class="mt-3">
+                        <Button label="Да" class="bg-[green] border-[green] w-20 mr-3" @click="validateAndPrepare"></Button>
+                        <Button label="Нет" class=" bg-[grey] border-[grey] w-20" @click="closeConfirmDialog"></Button>
+                    </div>
+                </div>
+         </Dialog>
+
+</div>
     
 </template>
 
@@ -135,7 +147,7 @@ import InputNumber from 'primevue/inputnumber';
 import InputText from 'primevue/inputtext';
 import Dropdown from 'primevue/dropdown';
 import Calendar from 'primevue/calendar';
-
+import Dialog from 'primevue/dialog';
 
 export default {
     name: 'EmployeeCreate',
@@ -144,11 +156,12 @@ export default {
         InputNumber,
         InputText,
         Dropdown,
-        Calendar
-
+        Calendar,
+        Dialog
     },
     data() {
         return {
+            confirmDialog: false,
             id: '',
             isEditing: false,
             loading: false,
@@ -256,6 +269,13 @@ export default {
             this.$router.back()
         },
 
+        showConfirmDialog(){
+            this.confirmDialog = true;
+        }, 
+
+       closeConfirmDialog(){
+        this.confirmDialog = false
+       },
         
     },
 }

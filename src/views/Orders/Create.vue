@@ -48,33 +48,50 @@
                 </div>
             </div>
             <div v-if="!loading">
-                <Button :label="buttonLabel" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="validateAndPrepare" />
+                <Button :label="buttonLabel" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="showDialog" />
             </div>
 
             <div v-if="loading">
                 <ProgressSpinner />
             </div>
         </div>
+
+        <Dialog  :header="'Подтверждение'" v-model:visible="displayDialog" style="width: 400px !important;">
+            <div class="dialog-content">
+            <h1>Сохранить изменения?</h1>
+            <div class="mt-3">
+                        <Button label="Да" class="bg-[green] border-[green] w-20 mr-3" @click="validateAndPrepare"></Button>
+                        <Button label="Нет" class=" bg-[grey] border-[grey] w-20" @click="closeDialog"></Button>
+                    </div>
+                </div>
+         </Dialog>
+
+
     </div>
+
 </template>
 
 <script>
 import { getOrder, updateOrder, getObjectsList, createOrder } from '@/services'
 import Button from 'primevue/button'
 import Dropdown from 'primevue/dropdown';
-
+import Dialog from 'primevue/dialog';
 import Textarea from 'primevue/textarea';
 import Calendar from 'primevue/calendar';
+
 export default {
     name: 'OrderCreate',
     components: {
         Button,
         Dropdown,
         Calendar,
-        Textarea
+        Textarea,
+        Dialog
     },
     data() {
         return {
+            toast: false,
+            displayDialog: false,
             id: '',
             isEditing: false,
             loading: false,
@@ -122,6 +139,8 @@ export default {
         }
     },
     methods: {
+      
+
         validateAndPrepare() {
             const data = { ...this.body }
             if (this.isEditing) {
@@ -151,7 +170,17 @@ export default {
             this.$router.back()
         },
 
+        showDialog() {
+      this.displayDialog = true;  
     },
+
+    closeDialog() {
+      this.displayDialog = false;  
+    },
+
+    },
+
+    
 }
 </script>
 
@@ -175,4 +204,13 @@ export default {
 .custom {
     width: 450px;
 }
+
+.dialog-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 20px;
+}
+
+
 </style>

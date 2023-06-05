@@ -12,14 +12,14 @@
                 @click="redirectToCreatePage" />
         </div></div>
 
-        <div v-if="isDownloading" class="flex justify-center items-center">
+        <div v-if="loading" class="flex justify-center items-center">
             <ProgressSpinner />
         </div>
         
 
         <div class="order-container">
-            <ObjectCard v-for="object in objectsList" :object="object" :deleteObject="deleteObject" :editObject="editObject"
-                :openOrderCreationDialog="openOrderCreationDialog" :key="object.id" />
+            <ObjectCard v-for="object in objectsList" :object="object" :editObject="editObject"
+                :openOrderCreationDialog="openOrderCreationDialog" :key="object.id" @updateObjects="getObjectsList"/>
         </div>
         
     </div>
@@ -27,7 +27,7 @@
 
 
 <script>
-import { getObjectsList, deleteObject } from '@/services';
+import { getObjectsList } from '@/services';
 import Button from 'primevue/button'
 import ObjectCard from './components/ObjectCard.vue';
 import ProgressSpinner from 'primevue/progressspinner';
@@ -37,7 +37,7 @@ export default {
     data() {
         return {
             objectsList: [],
-            isDownloading: false,
+            loading: false,
         };
     },
     components: {
@@ -49,15 +49,10 @@ export default {
         getObjectsList() {
             getObjectsList().then(res => {
                 this.objectsList = res;
-                this.isDownloading = false;
+                this.loading = false;
             });
         },
-        deleteObject(objectId) {
-            deleteObject(objectId).then(res => {
-                console.log(res)
-            })
-            this.getObjectsList()
-        },
+       
         editObject(objectId) {
             router.push(`objects/edit/${objectId}`)
         },
@@ -70,7 +65,7 @@ export default {
         }
     },
     mounted() {
-        this.isDownloading = true;
+        this.loading = true;
         this.getObjectsList();
         
     },

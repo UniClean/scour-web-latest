@@ -1,5 +1,5 @@
 <template>
-    <div class='login'>
+    <div class='login' v-if="!loading">
         <div class="logo">
             <img src="../assets/images/scour_logo.png" alt="logo" class="" />
         </div>
@@ -16,31 +16,37 @@
                 <span class="p-inputgroup-addon">
                     <i class="pi pi-lock text-[#060E28]"></i>
                 </span>
-                <InputText v-model="credentials.password" placeholder="Введите пароль" />
+                <InputText v-model="credentials.password" placeholder="Введите пароль" type="password"/>
             </div>
         </div>
 
         <Button label="Войти" @click="login()" class="bg-[#eaedf0] border-[#060E28] text-[#060E28] mt-5 mb-0 w-40" />
 
     </div>
+
+    <div v-if="loading" class="progressSpiner">
+            <ProgressSpinner />
+        </div>
 </template>
 
 <script>
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button'
 import { login } from '@/services';
+import ProgressSpinner from 'primevue/progressspinner';
 
 export default {
     name: 'LoginPage',
 
     components: {
         InputText,
-        Button
+        Button,
+        ProgressSpinner
     },
 
     data() {
         return {
-            remember: false,
+            loading: false,
             credentials: {
                 username: "",
                 password: ""
@@ -49,6 +55,7 @@ export default {
     },
     methods: {
         login() {
+            this.loading = true
             login(this.credentials).then(res => {
                 if (res.tokens.access) {
                     localStorage.setItem('token', res.tokens.access.toString());
@@ -88,14 +95,12 @@ export default {
 
 .custom-login {
     width: 300px !important;
-
-
 }
 
-.remember {
-
-
-
-    margin-right: 148px;
+.progressSpiner {
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
 }
 </style>

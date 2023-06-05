@@ -69,9 +69,19 @@
                 <Textarea class="custom" v-model="body.additional_information" :autoResize="true" rows="5" cols="30" />
             </div>
            
-            <Button :label="buttonLabel" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="validateAndPrepare" />
+            <Button :label="buttonLabel" class="bg-[#060E28] b-[#060E28] mt-5 mb-5 w-40" @click="showConfirmDialog"  />
         </div>
         
+        <Dialog  :header="'Подтверждение'" v-model:visible="confirmDialog" style="width: 400px !important;">
+            <div class="dialog-content">
+            <h1>Сохранить изменения?</h1>
+            <div class="mt-3">
+                        <Button label="Да" class="bg-[green] border-[green] w-20 mr-3" @click="validateAndPrepare"></Button>
+                        <Button label="Нет" class=" bg-[grey] border-[grey] w-20" @click="closeConfirmDialog"></Button>
+                    </div>
+                </div>
+         </Dialog>
+
     </div>
 </template>
 
@@ -82,6 +92,8 @@ import Dropdown from 'primevue/dropdown';
 import InputNumber from 'primevue/inputnumber';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
+import Dialog from 'primevue/dialog';
+
 export default {
     name: 'ObjectCreate',
     components: {
@@ -89,10 +101,12 @@ export default {
         Dropdown,
         InputNumber,
         InputText,
-        Textarea
+        Textarea,
+        Dialog
     },
     data() {
         return {
+            confirmDialog: false,
             id: '',
             isEditing: false,
             loading: false,
@@ -189,6 +203,14 @@ export default {
             this.loading = false
             this.$router.back()
         },
+
+        showConfirmDialog(){
+            this.confirmDialog = true;
+        }, 
+
+       closeConfirmDialog(){
+        this.confirmDialog = false
+       },
     },
 }
 </script>

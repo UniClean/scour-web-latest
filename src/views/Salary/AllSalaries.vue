@@ -46,7 +46,7 @@
                       <template #body="rowData">
                           <div class="flex justify-end" v-if="rowData.data.notPaidIDs.employee_salary_ids.length > 0">                 
                               <Button label="Оплатить" class="border-[#060E28] bg-white text-[#060E28]"
-                                          @click="() => changeStatusOfSalary(rowData.data.notPaidIDs)" />
+                                          @click="() => showConfirmDialog(rowData.data.notPaidIDs)" />
                           </div>
                       </template>            
                   </Column>
@@ -59,7 +59,17 @@
             </DataTable>
         </div>
         <div>
-          
+
+          <Dialog  :header="'Подтверждение'" v-model:visible="confirmDialog" style="width: 400px !important;">
+            <div class="dialog-content">
+            <h1>Подтвердите оплату</h1>
+            <div class="mt-3">
+                        <Button label="Подтвердить" class="bg-[green] border-[green]  mr-3" @click="changeStatusOfSalary(this.chosenSalaryId)"></Button>
+                        <Button label="Отмена" class=" bg-[grey] border-[grey] " @click="closeConfirmDialog"></Button>
+                    </div>
+                </div>
+         </Dialog>
+
     </div>
   
     
@@ -73,7 +83,8 @@
   import Dropdown from 'primevue/dropdown';
   import Button from 'primevue/button';
   import router from '../../router'
-  
+  import Dialog from 'primevue/dialog';
+
   export default {
     name: 'AllSalariesPage',
     data() {
@@ -81,6 +92,8 @@
       const defaultMonth = now.getMonth() + 1;
       const defaultYear = now.getFullYear();
         return {
+          chosenSalaryId: 0,
+          confirmDialog: false,
           loading: false,
           month: defaultMonth,
           year: defaultYear,
@@ -103,8 +116,8 @@
         Column,
         Button,
         ProgressSpinner,
-        Dropdown
-        
+        Dropdown,
+        Dialog
   
     },
     methods: {
@@ -175,10 +188,11 @@ calculateTotal(salary) {
   },
 
   
-  changeStatusOfSalary(notPaidIDs){   
-    changeStatusOfSalary(notPaidIDs)
+  async changeStatusOfSalary(notPaidIDs){  
+    this.loading = true; 
+    await changeStatusOfSalary(notPaidIDs)
     this.getAllSalaries(this.month, this.year)
-  
+    this.confirmDialog = false
   },
   
   
@@ -195,6 +209,14 @@ calculateTotal(salary) {
         router.push('/allsalaries')
         },
   
+        showConfirmDialog(salaryId){
+            this.confirmDialog = true;
+            this.chosenSalaryId = salaryId
+        }, 
+
+       closeConfirmDialog(){
+        this.confirmDialog = false
+       },
     
       },
       computed: {

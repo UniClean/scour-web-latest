@@ -17,8 +17,8 @@
             <TabPanel header="Созданные заявки">
 
                 <div class="order-container">
-                    <OrderCard v-for="order in plannedOrders" :order="order" :deleteOrder="deleteOrder"
-                        :editOrder="editOrder" :key="order.id" class="order-card" :activeIndex="0" />
+                    <OrderCard v-for="order in plannedOrders" :order="order" 
+                        :editOrder="editOrder" :key="order.id" class="order-card" @updateOrders="updateOrders" />
                 </div>
 
             </TabPanel>
@@ -28,8 +28,8 @@
             <TabPanel header="На выполнении">
 
                 <div class="order-container">
-                    <OrderCard v-for="order in inProgressOrders" :order="order" :deleteOrder="deleteOrder"
-                        :editOrder="editOrder" :key="order.id" class="order-card" />
+                    <OrderCard v-for="order in inProgressOrders" :order="order" 
+                        :editOrder="editOrder" :key="order.id" class="order-card" @updateOrders="updateOrders"/>
                 </div>
 
             </TabPanel>
@@ -38,9 +38,9 @@
             <TabPanel header="Ждут подтверждения">
 
                 <div class="order-container">
-                    <OrderCard v-for="order in completedOrders" :order="order" :deleteOrder="deleteOrder"
-                        :confirmOrder="confirmOrder" :editOrder="editOrder" :getAssignedEmployees="getAssignedEmployees"
-                        :key="order.id" class="order-card" />
+                    <OrderCard v-for="order in completedOrders" :order="order" 
+                        :editOrder="editOrder" :getAssignedEmployees="getAssignedEmployees" 
+                        :key="order.id" class="order-card" @updateOrders="updateOrders"/>
                 </div>
 
             </TabPanel>
@@ -48,7 +48,7 @@
             <TabPanel header="Завершены">
 
                 <div class="order-container">
-                    <OrderCard v-for="order in confirmedOrders" :order="order" :deleteOrder="deleteOrder"
+                    <OrderCard v-for="order in confirmedOrders" :order="order" 
                         :editOrder="editOrder" :key="order.id" class="order-card" />
                 </div>
 
@@ -57,7 +57,7 @@
             <TabPanel header="Просрочены">
 
                 <div class="order-container">
-                    <OrderCard v-for="order in overdueOrders" :order="order" :deleteOrder="deleteOrder"
+                    <OrderCard v-for="order in overdueOrders" :order="order" 
                         :editOrder="editOrder" :key="order.id" class="order-card" />
                 </div>
 
@@ -66,28 +66,30 @@
         </TabView>
         <div v-if="loading" class="flex justify-center items-center">
             <ProgressSpinner />
-        </div>
+        </div>  
+
     </div>
+
+   
+
+
 </template>
 
 
 
 
 <script>
-import { getOrdersList, deleteOrder, confirmOrder } from '@/services';
+import { getOrdersByStatus } from '@/services';
 import Button from 'primevue/button'
 import OrderCard from './components/OrderCard.vue';
 import ProgressSpinner from 'primevue/progressspinner';
 import router from '../../router'
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
-
 export default {
     name: 'OrdersPage',
     data() {
         return {
-            ordersList: [],
-            isDownloading: false,
             inProgressOrders: [],
             completedOrders: [],
             confirmedOrders: [],
@@ -101,45 +103,73 @@ export default {
         OrderCard,
         ProgressSpinner,
         TabView,
-        TabPanel
+        TabPanel,
+        
     },
     methods: {
-        getOrdersList() {
-            getOrdersList().then(res => {
-                this.ordersList = res;
-                this.plannedOrders = this.filterOrdersByStatus('PLANNED');
-                this.inProgressOrders = this.filterOrdersByStatus('IN_PROGRESS');
-                this.completedOrders = this.filterOrdersByStatus('COMPLETED');
-                this.confirmedOrders = this.filterOrdersByStatus('CONFIRMED');
-                this.overdueOrders = this.filterOrdersByStatus('OVERDUE');
+
+        getPlannedOrders(status) {
+            getOrdersByStatus(status).then(res => {
+                this.plannedOrders = res;
                 this.loading = false;
             });
         },
 
-        deleteOrder(orderId) {
-            deleteOrder(orderId)
-            this.getOrdersList();
+        getInProgressOrders(status) {
+            getOrdersByStatus(status).then(res => {
+                this.inProgressOrders = res;
+                this.loading = false;
+            });
         },
+
+        getCompletedOrders(status) {
+            getOrdersByStatus(status).then(res => {
+                this.completedOrders = res;
+                this.loading = false;
+            });
+        },
+
+          getConfirmedOrders(status) {
+             getOrdersByStatus(status).then(res => {
+                this.confirmedOrders = res;
+                  this.loading = false;
+            });
+        },
+
+        getOverdueOrders(status) {
+            getOrdersByStatus(status).then(res => {
+                this.overdueOrders = res;
+                this.loading = false;
+            });
+        },
+
+        updateOrders() {
+            this.loading = true;
+            this.getPlannedOrders('PLANNED');
+            this.getInProgressOrders('IN_PROGRESS');
+            this.getCompletedOrders('COMPLETED');
+            this.loading = false;
+        },
+
         editOrder(orderId) {
             router.push(`orders/edit/${orderId}`)
         },
 
-        confirmOrder(orderId) {
-            confirmOrder(orderId)
-            this.getOrdersList();
-        },
 
         redirectToCreatePage() {
             router.push('orders/create')
         },
-        filterOrdersByStatus(status) {
-            return this.ordersList.filter(order => order.status === status);
-        },
-
+      
+        
+    
     },
     mounted() {
         this.loading = true;
-        this.getOrdersList();
+        this.getPlannedOrders('PLANNED');
+        this.getInProgressOrders('IN_PROGRESS');
+        this.getCompletedOrders('COMPLETED');
+        this.getConfirmedOrders('CONFIRMED');
+        this.getOverdueOrders('OVERDUE')     
     },
 }
 </script>

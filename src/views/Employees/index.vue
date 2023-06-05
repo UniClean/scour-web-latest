@@ -10,22 +10,40 @@
                 @click="redirectToCreatePage" />
         </div></div>
 
-        <div v-if="isDownloading" class="flex justify-center items-center">
+        <TabView class="ml-10 mt-5">
+            <TabPanel header="Клинеры">
+
+                <div class="employee-container">
+            <EmployeeCard v-for="employee in cleaners" :employee="employee" :editEmployee="editEmployee"
+              :key="employee.id" @updateEmployees="getAllEmployees"/>
+                </div>
+
+            </TabPanel>
+
+            <TabPanel header="Супервайзеры">
+                <div class="employee-container">
+                <EmployeeCard v-for="employee in supervisors" :employee="employee" :editEmployee="editEmployee"
+                :key="employee.id" @updateEmployees="getAllEmployees"/>
+                </div>
+            </TabPanel>
+
+        </TabView>
+
+        <div v-if="loading" class="flex justify-center items-center">
             <ProgressSpinner />
         </div>
-        <div class="employee-container">
-            <EmployeeCard v-for="employee in employeeList" :employee="employee" :editEmployee="editEmployee"
-             :deleteEmployee="deleteEmployee" :key="employee.id" />
-        </div>
+    
     </div>
 </template>
 
 
 <script>
-import { getAllEmployees, deleteEmployee } from '@/services';
+import { getAllEmployees} from '@/services';
 import Button from 'primevue/button'
 import EmployeeCard from './components/EmployeeCard.vue';
 import ProgressSpinner from 'primevue/progressspinner';
+import TabView from 'primevue/tabview';
+import TabPanel from 'primevue/tabpanel';
 import router from '../../router'
 export default {
     name: 'EmployeePage',
@@ -33,26 +51,26 @@ export default {
         return {
             employeeList: [],
             loading: false,
+            cleaners: [],
+            supervisors: []
         };
     },
     components: {
         Button,
         EmployeeCard,
         ProgressSpinner,
+        TabView,
+        TabPanel,
     },
     methods: {
+       
         getAllEmployees() {
             getAllEmployees().then(res => {
                 this.employeeList = res;
+                this.cleaners = this.filterEmployeesByPosition(2);
+                this.supervisors = this.filterEmployeesByPosition(1);
                 this.loading = false;
             });
-        },
-
-        deleteEmployee(employeeId) {
-            deleteEmployee(employeeId).then(res => {
-                console.log(res)
-            })
-            this.getAllEmployees()
         },
 
         editEmployee(employeeId) {
@@ -65,7 +83,15 @@ export default {
         },
     redirectToCreatePage() {
         router.push('employees/create')
-        }},
+        },
+
+    filterEmployeesByPosition(position) {
+            return this.employeeList.filter(employee => employee.position_id === position);
+        },
+    
+    
+    
+    },
     mounted() {
         this.loading = true;
         this.getAllEmployees();

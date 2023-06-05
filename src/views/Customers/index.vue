@@ -34,7 +34,7 @@
                             <Button class="text-[green] border-[green] mr-1" icon="pi pi-pencil"
                                 @click="() => editCustomer(rowData.data.id)" />
                             <Button class="text-[red] border-[red] mr-1 " icon="pi pi-trash"
-                                @click="() => deleteCustomer(rowData.data.id)" />
+                                @click="() => showDeleteDialog(rowData.data.id)" />
                         </div>
 
 
@@ -65,6 +65,20 @@
             </Dialog>
         </div>
 
+        <Dialog  :header="'Подтверждение удаления'" v-model:visible="deleteDialog" style="width: 400px !important;">
+            <div class="dialog-content" v-if="!loading">
+            <h1>Удалить заказчика?</h1>
+            <div class="mt-3" >
+                        <Button label="Да" class="bg-[green] border-[green] w-20 mr-3" @click="deleteCustomer(this.chosenCustomerID)"></Button>
+                        <Button label="Нет" class=" bg-[grey] border-[grey] w-20" @click="closeDeleteDialog"></Button>
+                    </div>
+                </div>
+
+                <div v-if="loading" class="flex justify-center items-center">
+            <ProgressSpinner />
+        </div>
+
+         </Dialog>
     </div>
 </template>
 
@@ -91,7 +105,9 @@ export default {
             previewFile: null,
             previewUrl: null,
             loadedFiles: [],
-            documentLoading: false
+            documentLoading: false,
+            deleteDialog: false,
+            chosenCustomerID: null
         };
     },
     components: {
@@ -109,9 +125,11 @@ export default {
             });
         },
 
-        deleteCustomer(customerId) {
-            deleteCustomer(customerId)
-            this.getCustomerList()
+        async deleteCustomer(customerId) {
+            this.loading = true;
+            await deleteCustomer(customerId)
+            this.getCustomerList();
+            this.deleteDialog = false 
         },
 
         editCustomer(customerId) {
@@ -178,6 +196,17 @@ export default {
             this.loading = false
             this.displayDialog = false
         },
+
+        showDeleteDialog(CustomerID){
+            this.deleteDialog = true;
+            this.chosenCustomerID = CustomerID
+   
+        }, 
+
+       closeDeleteDialog(){
+        this.confirmDialog = false
+       },
+
     },
     mounted() {
         this.loading = true;

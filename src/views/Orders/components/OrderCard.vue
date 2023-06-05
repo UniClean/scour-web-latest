@@ -49,8 +49,8 @@
             </div>
 
             <div v-if="order.status == 'PLANNED' || order.status === 'IN_PROGRESS'" class="flex justify-end">
-                <Button class="text-[green] border-[green] mr-1" icon="pi pi-pencil" @click="() => editOrder(order.id)" />
-                <Button class="text-[red] border-[red] mr-1 " icon="pi pi-trash" @click="() => deleteOrder(order.id)" />
+                <Button class="text-[green] border-[green] mr-1" icon="pi pi-pencil" @click="editOrder(order.id)" />
+                <Button class="text-[red] border-[red] mr-1 " icon="pi pi-trash" @click="showDeleteDialog(order.id)" />
             </div>
 
             <div v-if="order.status == 'COMPLETED' || order.status === 'CONFIRMED'" class="report mt-5">
@@ -61,7 +61,7 @@
                         @click=" showDialog(order.id)" />
 
                     <div v-if="order.status == 'COMPLETED'"> <Button label="Подтвердить"
-                            class="mt-2 border-1 border-black text-black " @click="confirmOrder(order.id)" /></div>
+                            class="mt-2 border-1 border-black text-black " @click="showConfirmDialog(order.id)" /></div>
                 </div>
 
                 <div>
@@ -92,26 +92,55 @@
                         </div>
 
                     </Dialog>
+              
                 </div>
-
 
             </div>
 
-
-
-
         </div>
+        <Dialog  :header="'Подтверждение удаления'" v-model:visible="deleteDialog" style="width: 400px !important;">
+            <div class="dialog-content" v-if="!loading">
+            <h1>Удалить заявку?</h1>
+            <div class="mt-3" >
+                        <Button label="Да" class="bg-[green] border-[green] w-20 mr-3" @click="deleteOrder(this.chosenOrderID)"></Button>
+                        <Button label="Нет" class=" bg-[grey] border-[grey] w-20" @click="closeDeleteDialog"></Button>
+                    </div>
+                </div>
+
+                <div v-if="loading" class="flex justify-center items-center">
+            <ProgressSpinner />
+        </div>
+         </Dialog>
+
+         <Dialog  :header="'Подтверждение'" v-model:visible="confirmDialog" style="width: 400px !important;">
+            <div class="dialog-content" v-if="!loading">
+            <h1>Подтвердить заявку?</h1>
+            <div class="mt-3" >
+                        <Button label="Да" class="bg-[green] border-[green] w-20 mr-3" @click="confirmOrder(this.chosenOrderID)"></Button>
+                        <Button label="Нет" class=" bg-[grey] border-[grey] w-20" @click="closeConfirmDialog"></Button>
+                    </div>
+                </div>
+
+                <div v-if="loading" class="flex justify-center items-center">
+            <ProgressSpinner />
+        </div>
+         </Dialog>
+
+
+     
+
     </div>
 </template>
 
 
 <script>
-import { getAssignedEmployees } from '@/services';
+import { getAssignedEmployees, deleteOrder, confirmOrder } from '@/services';
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog';
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import ProgressSpinner from 'primevue/progressspinner';
+
 
 export default {
     data() {
@@ -119,6 +148,9 @@ export default {
             loading: false,
             displayDialog: false,
             assignedEmployees: null,
+            chosenOrderID: null,
+            confirmDialog: false,
+            deleteDialog: false
         };
     },
     components: {
@@ -147,9 +179,41 @@ export default {
 
         },
 
+        async deleteOrder(orderId) {
+            this.loading = true;
+            await deleteOrder(orderId);
+            this.$emit("updateOrders");
+            this.deleteDialog = false       
+        },
+
+        showDeleteDialog(orderId){
+            this.deleteDialog = true;
+            this.chosenOrderID = orderId
+        }, 
+
+       closeDeleteDialog(){
+        this.deleteDialog = false
+       },
+
+       async confirmOrder(orderId) {
+            this.loading = true;
+            await confirmOrder(orderId);
+            this.$emit("updateOrders");
+            this.confirmDialog = false  
+        },
+
+        showConfirmDialog(orderId){
+            this.confirmDialog = true;
+            this.chosenOrderID = orderId
+        }, 
+
+       closeConfirmDialog(){
+        this.confirmDialog = false
+       },
+
     }
     ,
-    props: ['order', 'deleteOrder', 'editOrder', 'confirmOrder'],
+    props: ['order', 'editOrder'],
     computed: {
         circleClass() {
             const status = this.order.status;
@@ -167,10 +231,8 @@ export default {
                 return '';
             }
         }
-    },
-    mounted() {
-        this.loading = true;
-    },
+    }
+    
 }
 </script>
 

@@ -65,25 +65,67 @@
                 <Button class="text-[green] border-[green] mr-1" icon="pi pi-pencil"
                     @click="() => editEmployee(employee.id)" />
                 <Button class="text-[red] border-[red] mr-1 " icon="pi pi-trash"
-                    @click="() => deleteEmployee(employee.id)" />
+                    @click="() => showDeleteDialog(employee.id)" />
         </div>
         </div>
-    </div> </div>
+    </div> 
+    <Dialog  :header="'Подтверждение удаления'" v-model:visible="deleteDialog" style="width: 400px !important;">
+            <div class="dialog-content" v-if="!loading">
+            <h1>Удалить работника?</h1>
+            <div class="mt-3" >
+                        <Button label="Да" class="bg-[green] border-[green] w-20 mr-3" @click="deleteEmployee(this.chosenEmployeeID)"></Button>
+                        <Button label="Нет" class=" bg-[grey] border-[grey] w-20" @click="closeDeleteDialog"></Button>
+                    </div>
+                </div>
+
+                <div v-if="loading" class="flex justify-center items-center">
+            <ProgressSpinner />
+        </div>
+         </Dialog>
+    </div>
 </template>
 
 <script>
-
+import { deleteEmployee } from '@/services';
 import Button from 'primevue/button'
+import Dialog from 'primevue/dialog';
+import ProgressSpinner from 'primevue/progressspinner';
+
 export default {
-    props: ['employee', "deleteEmployee", "editEmployee"],
+    props: ['employee', "editEmployee"],
+    data() {
+        return {
+            loading: false,
+            chosenEmployeeID: null,
+            deleteDialog: false
+        };
+    },
     components: {
-        Button
+        Button,
+        Dialog,
+        ProgressSpinner
     },
     methods: {
         formatDate(dateTime) {
             const date = new Date(dateTime);
             return date.toLocaleDateString();
-        }
+        },
+
+       async deleteEmployee(employeeId) {
+            this.loading = true;
+            await deleteEmployee(employeeId)
+            this.$emit("updateEmployees");
+            this.deleteDialog = false 
+        },
+
+        showDeleteDialog(employeeId){
+            this.deleteDialog = true;
+            this.chosenEmployeeID = employeeId
+        }, 
+
+       closeDeleteDialog(){
+        this.deleteDialog = false
+       },
     },
 
 }

@@ -37,7 +37,7 @@
                             <Button class="text-[green] border-[green] mr-1" icon="pi pi-pencil"
                                         @click="() => editInventory(rowData.data.id)" />
                             <Button class="text-[red] border-[red] mr-1 " icon="pi pi-trash"
-                                        @click="() => deleteInventory(rowData.data.id)" />
+                                        @click="() => showDeleteDialog(rowData.data.id)" />
                         </div>
 
                     
@@ -47,6 +47,20 @@
             </DataTable>
         </div>
 
+        <Dialog  :header="'Подтверждение удаления'" v-model:visible="deleteDialog" style="width: 400px !important;">
+            <div class="dialog-content" v-if="!loading">
+            <h1>Удалить оборудование?</h1>
+            <div class="mt-3" >
+                        <Button label="Да" class="bg-[green] border-[green] w-20 mr-3" @click="deleteInventory(this.chosenInventoryID)"></Button>
+                        <Button label="Нет" class=" bg-[grey] border-[grey] w-20" @click="closeDeleteDialog"></Button>
+                    </div>
+                </div>
+
+                <div v-if="loading" class="flex justify-center items-center">
+            <ProgressSpinner />
+        </div>
+
+         </Dialog>
 
     </div>
 </template>
@@ -58,10 +72,14 @@ import Column from 'primevue/column'
 import Button from 'primevue/button'
 import ProgressSpinner from 'primevue/progressspinner';
 import router from '../../router'
+import Dialog from 'primevue/dialog';
+
 export default {
     name: 'InventoryPage',
     data() {
         return {
+            chosenInventoryID: 0,
+            deleteDialog: false,
             inventorytList: [],
             loading: false,
         };
@@ -70,7 +88,8 @@ export default {
         DataTable,
         Column,
         Button,
-        ProgressSpinner
+        ProgressSpinner,
+        Dialog
     },
     methods: {
         getInventoryList() {
@@ -80,11 +99,11 @@ export default {
             });
         },
 
-        deleteInventory(inventoryId) {
-            deleteInventory(inventoryId).then(res => {
-                console.log(res)
-            })
-            this.getInventoryList()
+        async deleteInventory(inventoryId) {
+            this.loading = true;
+            await deleteInventory(inventoryId);
+            this.getInventoryList();
+            this.deleteDialog = false
         },
 
         editInventory(inventoryId) {
@@ -101,7 +120,17 @@ export default {
 
         redirectInventoryPage() {
         router.push('/inventory')
-        }
+        },
+
+        showDeleteDialog(inventoryId){
+            this.deleteDialog = true;
+            this.chosenInventoryID = inventoryId
+   
+        }, 
+
+       closeDeleteDialog(){
+        this.confirmDialog = false
+       },
     },
     mounted() {
         this.loading = true;

@@ -55,13 +55,13 @@
                     <template #body="rowData">
                         <div class="flex justify-end" v-if="!rowData.data.is_paid">                 
                             <Button label="Оплатить" class="border-[#060E28] bg-white text-[#060E28]"
-                                        @click="() => changeStatusOfOneSalary(rowData.data.id)" />
+                                        @click="() => showConfirmDialog(rowData.data.id)" />
                         </div>
                     </template>  
                     <template #footer >
                         <Button v-if="this.notPaid != 0" label="Оплатить всё"
                                 class="border-[green] bg-white text-[green] "
-                                @click="changeStatusOfAllSalaries" />
+                                @click="showConfirmDialogAll" />
                   </template>
                 </Column>
 
@@ -75,7 +75,27 @@
         
       </div>
       <div>
-        
+
+        <Dialog  :header="'Подтверждение'" v-model:visible="confirmDialog" style="width: 400px !important;">
+            <div class="dialog-content">
+            <h1>Подтвердите оплату одной заявки</h1>
+            <div class="mt-3">
+              <Button label="Подтвердить" class="bg-[green] border-[green]  mr-3" @click="changeStatusOfOneSalary(this.chosenSalaryId)"></Button>
+              <Button label="Отмена" class=" bg-[grey] border-[grey] " @click="closeConfirmDialog"></Button>
+                    </div>
+                </div>
+         </Dialog>
+
+         <Dialog  :header="'Подтверждение'" v-model:visible="confirmDialogAll" style="width: 400px !important;">
+            <div class="dialog-content">
+            <h1>Подтвердите оплату всех заявок</h1>
+            <div class="mt-3">
+              <Button label="Подтвердить" class="bg-[green] border-[green]  mr-3" @click="changeStatusOfAllSalaries"></Button>
+              <Button label="Отмена" class=" bg-[grey] border-[grey] " @click="closeConfirmDialogAll"></Button>
+                    </div>
+                </div>
+         </Dialog>
+
   </div>
 
   
@@ -89,6 +109,7 @@ import ProgressSpinner from 'primevue/progressspinner';
 import Dropdown from 'primevue/dropdown';
 import Button from 'primevue/button';
 import router from '../../router'
+import Dialog from 'primevue/dialog';
 
 export default {
   name: 'SalaryPage',
@@ -97,6 +118,9 @@ export default {
     const defaultMonth = now.getMonth() + 1;
     const defaultYear = now.getFullYear();
       return {
+        chosenSalaryId: 0,
+        confirmDialog: false,
+        confirmDialogAll: false,
         loading: false,
         employee_id: null,
         month: defaultMonth,
@@ -125,8 +149,8 @@ export default {
       Column,
       Button,
       ProgressSpinner,
-      Dropdown
-      
+      Dropdown,
+      Dialog
 
   },
   methods: {
@@ -139,8 +163,8 @@ export default {
 
     
   
-      getSalaryOfOneEmployee(employee_id, month, year) {
-  getSalaryOfOneEmployee(employee_id, month, year).then(res => {
+    getSalaryOfOneEmployee(employee_id, month, year) {
+     getSalaryOfOneEmployee(employee_id, month, year).then(res => {
     this.salaries = res.map(salary => {
       const date = salary.dateOfMonth;
       const formattedDate = this.formatDate(date)
@@ -188,17 +212,19 @@ addingNotPaidIDs(salary) {
  return this.salaryIDs
 },
 
-changeStatusOfOneSalary(employee_salary_ids){
+async changeStatusOfOneSalary(employee_salary_ids){
+  this.loading = true; 
   this.salaryID.employee_salary_ids.push(employee_salary_ids);
-  changeStatusOfSalary(this.salaryID);
+  await changeStatusOfSalary(this.salaryID);
   this.getSalaryOfOneEmployee(this.employee_id, this.month, this.year)
-
+  this.confirmDialog = false
 },
 
-changeStatusOfAllSalaries(){
-  changeStatusOfSalary(this.salaryIDs);
+async changeStatusOfAllSalaries(){
+  this.loading = true; 
+  await changeStatusOfSalary(this.salaryIDs);
   this.getSalaryOfOneEmployee(this.employee_id, this.month, this.year)
-
+  this.confirmDialogAll = false
 },
 
 
@@ -213,6 +239,23 @@ formatDate(dateTime) {
         redirectToSalaryPage() {
         router.push('/salary')
         },
+
+        showConfirmDialog(salaryId){
+            this.confirmDialog = true;
+            this.chosenSalaryId = salaryId
+        }, 
+
+       closeConfirmDialog(){
+        this.confirmDialog = false
+       },
+
+       showConfirmDialogAll(){
+            this.confirmDialogAll = true;
+        }, 
+
+       closeConfirmDialogAll(){
+        this.confirmDialogAll = false
+       },
   
     },
 
