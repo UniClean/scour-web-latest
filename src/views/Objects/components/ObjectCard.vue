@@ -13,7 +13,7 @@
         </div>
 
 
-        <div class="card-body mt-3">
+        <div class="card-body">
             <div class="card-body__item">
                 <div class="card-body__item__title">
                     <p><span class="font-bold">Заказчик:</span> {{object.customer.name}}</p>
@@ -43,7 +43,7 @@
             </div>
 
             <div class="flex justify-end mt-4">
-            <div class="flex justify-between ">
+            <div class="Buttons flex justify-between ">
                 <Button class="text-[#060E28] border-[#060E28] bg-white mr-1" icon="pi pi-plus-circle"
                 @click=" showDialog(object.id)" />
 
@@ -52,10 +52,18 @@
                     
                 <Button class="text-[red] border-[red] " icon="pi pi-trash" @click="() => showDeleteDialog(object.id)" />
             </div>
+            </div>
+
+             
         </div>
 
-        <div>
-            <Dialog  :header="'Создание заявки на объект: '+  object.name " v-model:visible="displayDialog" 
+       
+            
+    
+
+    </div>
+
+    <Dialog  :header="'Создание заявки на объект: '+  object.name " v-model:visible="displayDialog" 
             style="width: 500px !important; background-color: white;">
 
             <div class="content">
@@ -113,11 +121,8 @@
             <div v-if="loading">
             </div>
         </Dialog>
-    </div>      
-        </div>
 
-        <div>
-            <Dialog  :header="'Дополнительная информация по объекту: ' + object.name " v-model:visible="displayInfoDialog" 
+    <Dialog  :header="'Дополнительная информация по объекту: ' + object.name " v-model:visible="displayInfoDialog" 
             style="width: 400px !important; background-color: white;">
 
 
@@ -150,11 +155,10 @@
 
 
         </Dialog>
-    </div>
 
     <Dialog  :header="'Подтверждение удаления'" v-model:visible="deleteDialog" style="width: 400px !important;">
             <div class="dialog-content" v-if="!loading">
-            <h1>Удалить заявку?</h1>
+            <h1>Удалить объект?</h1>
             <div class="mt-3" >
                         <Button label="Да" class="bg-[green] border-[green] w-20 mr-3" @click="deleteObject(this.chosenObjectID)"></Button>
                         <Button label="Нет" class=" bg-[grey] border-[grey] w-20" @click="closeDeleteDialog"></Button>
@@ -166,7 +170,7 @@
         </div>
          </Dialog>
 
-    </div>
+
 </template>
 
 <script>
@@ -238,7 +242,6 @@ export default {
 
         
 mounted() {
-    // this.loading = true;
         if (this.isEditing) {
             this.loading = true
             getOrder(this.id).then(res => {
@@ -321,6 +324,18 @@ mounted() {
 </script>
 
 <style>
+.card-body{
+    display: flex;
+    flex-direction: column;
+  height: 100%;
+}
+
+.Buttons{
+margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+}
+
 .images {
   max-width: 400px; 
   height: auto;
@@ -355,7 +370,7 @@ mounted() {
 }
 
 .column-custom{
-    display: flex;
+display: flex;
   justify-content: center;
   align-items: center;
 }

@@ -6,13 +6,16 @@
 
         <div class="flex justify-end">
             <Button 
-                class="border-[#060E28] bg-white text-[#060E28] font-medium mt-5 mr-5 " icon="pi pi-plus-circle"
+                class="border-[#060E28] bg-white text-[#060E28] font-medium mt-5 mr-3 " icon="pi pi-plus-circle"
                 @click="redirectToCreatePage" />
             <Button label="Инвентарь"
-                class="border-[#060E28] bg-white text-[#060E28] font-medium mt-5 mr-5"
+                class="border-[#060E28] bg-white text-[#060E28] font-medium mt-5 mr-3"
                 @click="redirectInventoryPage" />
+                <Button label="Заявки на инвентарь"
+                class="border-[#060E28] bg-white text-[#060E28] font-medium mt-5 mr-3"
+                @click="redirectInventoryOrdersPage" />
                 <Button label="Оборудование"
-                class="border-[#060E28] bg-white text-[#060E28] font-medium  mt-5 mr-5"
+                class="border-[#060E28] bg-white text-[#060E28] font-medium  mt-5 mr-3"
                 @click="redirectToEquipmentPage" />
         </div></div>
        
@@ -175,6 +178,10 @@ export default {
 
         redirectInventoryPage() {
         router.push('/inventory')
+        },
+
+        redirectInventoryOrdersPage(){
+            router.push('/inventory/orders')
         },
 
 

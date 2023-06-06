@@ -19,3 +19,7 @@ export const updateInventory = (id, inventory) => api
 export const deleteInventory = (id) => api
     .delete(`/api/inventory/${id}/delete/`)
     .then(res => res.data);
+
+export const getInventoryOrders = () => api
+    .get('/api/inventory-orders/')
+    .then(res => res.data);

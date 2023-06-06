@@ -29,6 +29,8 @@
                 <Column class="w-1/7">
                     <template #body="rowData">
                         <div class="flex justify-end">
+                            <Button class="border-[#060E28] bg-white text-[#060E28] font-medium mr-1" icon="pi pi-info"
+                                @click="showInfoDialog(rowData.data)"></Button>
                             <Button class="border-[#060E28] bg-white text-[#060E28] font-medium mr-1" icon="pi pi-file-edit"
                                 @click="showFileDialog(rowData.data.id)"></Button>
                             <Button class="text-[green] border-[green] mr-1" icon="pi pi-pencil"
@@ -81,6 +83,18 @@
         </div>
 
          </Dialog>
+
+
+         <Dialog  :header="'Дополнительная информация'" v-model:visible="displayInfoDialog" 
+            style="width: 400px !important;">  
+            <div v-if="this.aditionalInfoCustomer.additional_information!=''" class="mt-3">
+                <InputText :value="this.aditionalInfoCustomer.additional_information" readonly style="width: 350px !important;"/>
+            </div>
+            <div v-if="this.aditionalInfoCustomer.additional_information===''" class="mt-3">
+                <InputText :value="'Дополнительная информация отсутствует'" readonly style="width: 350px !important;"/>
+            </div>
+        </Dialog>
+        
     </div>
 </template>
 
@@ -91,6 +105,7 @@ import Column from 'primevue/column'
 import Button from 'primevue/button'
 import ProgressSpinner from 'primevue/progressspinner';
 import Dialog from 'primevue/dialog';
+import InputText from 'primevue/inputtext';
 
 import router from '../../router'
 export default {
@@ -110,7 +125,9 @@ export default {
             loadedFiles: [],       
             deleteDialog: false,
             chosenCustomerID: null,
-            emptyFiles: ''
+            emptyFiles: '',
+            displayInfoDialog: false,
+            aditionalInfoCustomer: null
         };
     },
     components: {
@@ -119,6 +136,7 @@ export default {
         Button,
         ProgressSpinner,
         Dialog,
+        InputText
     },
     methods: {
         getCustomerList() {
@@ -216,6 +234,12 @@ export default {
        closeDeleteDialog(){
         this.confirmDialog = false
        },
+
+    showInfoDialog(data){
+this.aditionalInfoCustomer = data
+console.log(this.aditionalInfoCustomer)
+this.displayInfoDialog = true
+    }
 
     },
     mounted() {

@@ -14,6 +14,7 @@ import Equipments from '@/views/Equipments/index.vue'
 import EquipmentCreate from '@/views/Equipments/Create.vue'
 import Inventory from '@/views/Inventory/index.vue'
 import InventoryCreate from '@/views/Inventory/Create.vue'
+import InventoryOrders from '@/views/Inventory/inventoryOrders.vue'
 import Salary from '@/views/Salary/Salary.vue'
 import AllSalaries from '@/views/Salary/AllSalaries.vue'
 
@@ -156,6 +157,12 @@ const routes = [
                 path: '/allsalaries',
                 name: 'allsalaries',
                 component: AllSalaries
+            },
+
+            {
+                path: '/inventory/orders',
+                name: 'inventory-orders',
+                component: InventoryOrders
             },
         ]
     }]

@@ -1,5 +1,5 @@
 <template>
-    <div class="card p-10 p-t-6 shadow-xl w-30% flex flex-col m-3 rounded-md b-t b-[#060E28]">
+    <div class="p-10 p-t-6 shadow-xl w-30% flex flex-col m-3 rounded-md b-t b-[#060E28]">
        
 
         <div class="icon-main">
@@ -10,8 +10,10 @@
             <h2> {{ employee.last_name }} {{ employee.first_name }} {{ employee.surname }}</h2>
         </div>
 
-<div class="inform mt-4">
+<div class="card mt-4">
         
+  
+
         <div class="card-body m-t-5">
             <div class="card-body__item">
                 <div class="card-body__item__title">
@@ -58,15 +60,16 @@
     </div>
     <div class="card-body__item__content">
     </div>
-</div>
+        </div>
+    </div>
 
 
-            <div class="flex justify-end mt-4">            
+            <div class="Buttons">            
                 <Button class="text-[green] border-[green] mr-1" icon="pi pi-pencil"
                     @click="() => editEmployee(employee.id)" />
                 <Button class="text-[red] border-[red] mr-1 " icon="pi pi-trash"
                     @click="() => showDeleteDialog(employee.id)" />
-        </div>
+        
         </div>
     </div> 
     <Dialog  :header="'Подтверждение удаления'" v-model:visible="deleteDialog" style="width: 400px !important;">
@@ -131,4 +134,25 @@ export default {
 }
 
 </script>
+
+<style>
+.card{
+    display: flex;
+    flex-direction: column;
+  height: 100%;
+}
+
+.Buttons{
+margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.card-body {
+    margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+}
+
+</style>
 

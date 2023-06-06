@@ -48,8 +48,9 @@
                 </div>
             </div>
 
-            <div v-if="order.status == 'PLANNED' || order.status === 'IN_PROGRESS'" class="flex justify-end">
-                
+            <div  v-if="order.status == 'PLANNED' || order.status === 'IN_PROGRESS'" class="Buttons ">
+
+                <Button class="text-[black] border-[black] mr-1" icon="pi pi-file-edit" @click="showUploadFileDialog(order)" />
                 <Button class="text-[green] border-[green] mr-1" icon="pi pi-pencil" @click="editOrder(order.id)" />
                 <Button class="text-[red] border-[red] mr-1 " icon="pi pi-trash" @click="showDeleteDialog(order.id)" />
                 
@@ -57,10 +58,10 @@
 
        
 
-            <div v-if="order.status == 'COMPLETED' || order.status === 'CONFIRMED'" class="report mt-5">
+            <div v-if="order.status == 'COMPLETED' || order.status === 'CONFIRMED'" class="Buttons ">
 
                 <div class="flex justify-end">
-                    <Button class="mt-2 mr-3 border-1 border-black text-black" icon="pi pi-file-edit"
+                    <Button class="mt-2 mr-3 border-1 border-black text-black" icon="pi pi-images"
                                 @click="showFileDialog(order.order_attachment_evidences_ids)"/>
 
                     <Button label="Отчет" class="mt-2 mr-3 border-1 border-black text-black"
@@ -70,7 +71,13 @@
                             class="mt-2 border-1 border-black text-black " @click="showConfirmDialog(order.id)" /></div>
                 </div>
 
-                <div>
+                
+
+            </div>
+
+        </div>
+
+
                     <Dialog :header="'Отчет по уборке объекта: ' + order.object.name" v-model:visible="displayDialog"
                         style="width: 400px !important; background-color: white;">
 
@@ -98,12 +105,8 @@
                         </div>
 
                     </Dialog>
-              
-                </div>
+            
 
-            </div>
-
-        </div>
         <Dialog  :header="'Подтверждение удаления'" v-model:visible="deleteDialog" style="width: 400px !important;">
             <div class="dialog-content" v-if="!loading">
             <h1>Удалить заявку?</h1>
@@ -147,6 +150,30 @@
 
             </Dialog>
             
+
+            <Dialog :header="'Фото объектов'" v-model:visible="displayUploadFileDialog"
+                style="width: 600px !important">
+
+                <div v-if="this.orderFilesID.length === 0">Фотографии отсутствуют</div>
+
+                <div v-if="loadingFiles" class="flex justify-center items-center">
+            <ProgressSpinner />
+        </div>
+        <div>{{ emptyFiles }}</div>
+
+                <div class="mb-3" v-for="(file, index) in loadedFiles" :key="index">
+                    <embed v-if="!loadingFiles && loadedFiles.length > 0" :src="file"  width="100%"
+                     >
+                </div>
+
+                <div class="mt-3">
+                    <input type="file" ref="fileInput">
+                </div>
+
+                <Button label="Добавить" class="bg-[#060E28] b-[#060E28] mt-1 mb-5 w-40" @click="() => uploadFileForOrder()">
+                </Button>
+
+            </Dialog>
             
 
      
@@ -156,13 +183,12 @@
 
 
 <script>
-import { getAssignedEmployees, deleteOrder, confirmOrder, displayOrderFile } from '@/services';
+import { getAssignedEmployees, deleteOrder, confirmOrder, displayEvidenceFile, uploadFileForOrder, displayObjectFile } from '@/services';
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog';
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import ProgressSpinner from 'primevue/progressspinner';
-
 
 export default {
     data() {
@@ -179,7 +205,9 @@ export default {
             previewFile: null,
             previewUrl: null,
             counter: 0,
-            orderFilesID: null
+            orderFilesID: null,
+            order_id: null,
+            displayUploadFileDialog: false
         };
     },
     components: {
@@ -256,7 +284,7 @@ export default {
 
          getDocumentFile(id) {
             
-             displayOrderFile(id).then(res => {
+            displayEvidenceFile(id).then(res => {
                 if (res) {
                     this.loadingFiles = true
                     const fileReader = new FileReader();
@@ -271,6 +299,61 @@ export default {
                     fileReader.readAsDataURL(this.previewFile);}
             }) 
              },
+
+             showUploadFileDialog(orderID){
+            this.order_id = orderID.id    
+            this.orderFilesID = orderID.order_attachments_ids
+            console.log(this.orderFilesID)
+            this.counter = 0
+            this.loadedFiles = []
+            if (orderID.order_attachments_ids.length > 0)
+            {this.loadingFiles = true}
+            this.displayUploadFileDialog = true;
+            this.orderFilesID.forEach(file => {
+                    this.getAttachmentObjectFile(file)
+                })
+            
+             },
+
+            
+            uploadFileForOrder() {
+            this.loadingFiles = true
+            const formData = new FormData()
+            formData.append('order_id', this.order_id);
+            const file = this.$refs.fileInput.files[0];
+            formData.append('attachment', file)
+            uploadFileForOrder(formData).then(res => {
+                if (res) {
+                    this.closeOnLoadEnded()
+                }
+            this.loadingFiles = false
+            })
+        },
+
+        closeOnLoadEnded() {
+            this.loadingFiles = false
+            this.displayUploadFileDialog = false
+            this.$emit("updateOrders")
+        },
+
+        getAttachmentObjectFile(id) {
+            
+            displayObjectFile(id).then(res => {
+                if (res) {
+                    this.loadingFiles = true
+                    const fileReader = new FileReader();
+                    fileReader.onload = () => {
+                        this.previewUrl = fileReader.result;
+                        this.loadedFiles.push(this.previewUrl)
+                    };
+                    this.counter ++;
+                    if (this.counter === this.orderFilesID.length) {
+                    this.loadingFiles = false;}
+                    this.previewFile = new File([res], "document", { type: res.type })
+                    fileReader.readAsDataURL(this.previewFile);}
+            }) 
+             },
+
 
     }
     ,
@@ -298,8 +381,18 @@ export default {
 </script>
 
 <style>
+
 .card-body {
     text-align: left;
+    display: flex;
+    flex-direction: column;
+  height: 100%;
+}
+
+.Buttons{
+margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .article-header {
@@ -321,4 +414,6 @@ export default {
     font-weight: bold;
     text-align: center;
 }
+
+
 </style>

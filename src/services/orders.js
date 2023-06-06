@@ -32,6 +32,20 @@ export const getAssignedEmployees = (order_id) => api
     .get(`/api/orders/${order_id}/assigned_employees`)
     .then(res => res.data);
 
-export const displayOrderFile = (id) =>
+export const displayEvidenceFile = (id) =>
     api.get(`/api/orders/attachment_evidence/${id}/file/`, { responseType: 'blob' })
         .then(res => res.data);
+
+
+export const uploadFileForOrder = (fileFormData) =>
+        api.post(`/api/orders/upload_attachment/`, fileFormData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+            .then(res => res);
+
+export const displayObjectFile = (id) =>
+        api.get(`/api/orders/attachment/${id}/file/`, { responseType: 'blob' })
+            .then(res => res.data);
